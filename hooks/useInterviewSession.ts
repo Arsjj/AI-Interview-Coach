@@ -11,6 +11,7 @@ export function useInterviewSession() {
   const [isEvaluationOpen, setIsEvaluationOpen] = useState(false);
   const [scores, setScores] = useState<number[]>([]);
   const [mode, setMode] = useState<InterviewMode>("practice");
+  const [sessionId, setSessionId] = useState<string | null>(null);
 
   const answeredCount = scores.length;
 
@@ -45,6 +46,10 @@ export function useInterviewSession() {
   }
 
   async function evaluateAnswer(messages: UIMessage[]) {
+    if (!sessionId) {
+      console.warn("No active session. Start interview first.");
+      return;
+    }
     const { question, questionMessageIndex } = getCurrentQuestion(messages);
     if (questionMessageIndex === -1) return;
 
@@ -87,12 +92,54 @@ export function useInterviewSession() {
     setEvaluation(data);
     setIsEvaluationOpen(true);
     setScores((prev) => [...prev, data.score]);
+
+    await fetch(`/api/interview/sessions/${sessionId}/answers`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        question,
+        answer: lastAnswer,
+        score: data.score,
+        strengths: data.strengths,
+        weaknesses: data.weaknesses,
+        seniorAnswer: data.seniorAnswer,
+        followUpQuestion: data.followUpQuestion,
+      }),
+    });
   }
 
   function resetEvaluation() {
     setEvaluation(null);
     setIsEvaluationOpen(false);
     setScores([]);
+  }
+
+  async function createSession() {
+    const res = await fetch("/api/interview/sessions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        topic,
+        level,
+        mode,
+      }),
+    });
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      console.error("Create session error:", errorText);
+      return null;
+    }
+
+    const session = await res.json();
+
+    setSessionId(session.id);
+
+    return session.id as string;
   }
 
   return {
@@ -115,6 +162,10 @@ export function useInterviewSession() {
     averageScore,
 
     mode,
-    setMode
+    setMode,
+
+    sessionId,
+    setSessionId,
+    createSession,
   };
 }

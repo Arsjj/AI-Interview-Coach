@@ -29,7 +29,10 @@ export function ChatWindow() {
     answeredCount,
     averageScore,
     mode,
-    setMode
+    setMode,
+    sessionId,
+    setSessionId,
+    createSession
   } = useInterviewSession();
 
   const {
@@ -40,6 +43,7 @@ export function ChatWindow() {
     isLoading,
     handleSubmit,
     startInterview,
+
   } = useInterviewChat({ topic, level })
 
   function resetInterview() {
@@ -52,6 +56,18 @@ export function ChatWindow() {
       top: messagesContainerRef.current.scrollHeight,
       behavior: 'smooth',
     });
+  }
+
+  async function handleStartInterview() {
+    let activeSessionId = sessionId;
+
+    if (!activeSessionId) {
+      activeSessionId = await createSession();
+    }
+
+    if (!activeSessionId) return;
+
+    startInterview();
   }
 
   useEffect(() => {
@@ -88,7 +104,7 @@ export function ChatWindow() {
 
             <div className="flex items-center gap-3">
 
-              <ModeSelector value={mode} onChange={setMode}/>
+              <ModeSelector value={mode} onChange={setMode} />
               <LevelSelector value={level} onChange={setLevel} />
               <TopicSelector value={topic} onChange={setTopic} />
             </div>
@@ -123,7 +139,7 @@ export function ChatWindow() {
             </button>
             <button
               type="button"
-              onClick={startInterview}
+              onClick={handleStartInterview}
               className="rounded-xl px-4 py-3 text-sm dark:border-white/10"
 
             >
