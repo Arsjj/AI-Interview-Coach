@@ -142,6 +142,22 @@ export function useInterviewSession() {
     return session.id as string;
   }
 
+  async function completeSession() {
+    if (!sessionId) return;
+
+    const res = await fetch(`/api/interview/sessions/${sessionId}/complete`, {
+      method: "PATCH",
+    });
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      console.error("Complete session error:", errorText);
+      return;
+    }
+
+    resetEvaluation();
+  }
+
   return {
     topic,
     setTopic,
@@ -167,5 +183,6 @@ export function useInterviewSession() {
     sessionId,
     setSessionId,
     createSession,
+    completeSession
   };
 }

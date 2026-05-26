@@ -1,6 +1,13 @@
-import { db } from "@/lib/db";
-import { interviewSessions } from "@/lib/db/schema";
-import { desc } from "drizzle-orm";
+// app/api/interview/sessions/route.ts
+import {
+  createInterviewSession,
+  getInterviewSessions,
+} from '@/lib/services/interview-service';
+
+export async function GET() {
+  const sessions = await getInterviewSessions();
+  return Response.json(sessions);
+}
 
 export async function POST(req: Request) {
   try {
@@ -8,40 +15,24 @@ export async function POST(req: Request) {
 
     if (!topic || !level || !mode) {
       return Response.json(
-        { error: "topic, level and mode are required" },
+        { error: 'topic, level and mode are required' },
         { status: 400 },
       );
     }
 
-    const [session] = await db
-      .insert(interviewSessions)
-      .values({
-        topic,
-        level,
-        mode,
-      })
-      .returning();
+    const session = await createInterviewSession({
+      topic,
+      level,
+      mode,
+    });
 
     return Response.json(session);
   } catch (error) {
-    console.error("Create session error:", error);
+    console.error('Create session error:', error);
 
     return Response.json(
-      { error: "Failed to create interview session" },
+      { error: 'Failed to create interview session' },
       { status: 500 },
     );
-  }
-}
-
-export async function GET() {
-  try {
-    const sessions = await db
-      .select()
-      .from(interviewSessions)
-      .orderBy(desc(interviewSessions.createdAt));
-    return Response.json(sessions);
-  } catch (error) {
-    console.error("Get sessions error:", error);
-    return Response.json({ error: "Failed to get sessions" }, { status: 500 });
   }
 }

@@ -32,7 +32,8 @@ export function ChatWindow() {
     setMode,
     sessionId,
     setSessionId,
-    createSession
+    createSession,
+    completeSession
   } = useInterviewSession();
 
   const {
@@ -136,6 +137,14 @@ export function ChatWindow() {
               className="rounded-xl border border-slate-300 hover:-bg- px-4 py-3 text-sm dark:border-white/10"
             >
               New interview
+            </button>
+            <button
+              type="button"
+              onClick={completeSession}
+              disabled={!sessionId}
+              className="rounded-xl border border-slate-300 px-4 py-3 text-sm dark:border-white/10"
+            >
+              Finish interview
             </button>
             <button
               type="button"

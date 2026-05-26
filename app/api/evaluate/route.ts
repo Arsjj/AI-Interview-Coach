@@ -1,12 +1,12 @@
 // app/api/evaluate/route.ts
-import { generateText } from 'ai';
-import { interviewModel } from '@/lib/ai/model';
-import { evaluationSchema } from '@/lib/ai/schemas/evaluation';
+import { generateText } from "ai";
+import { interviewModel } from "@/lib/ai/model";
+import { evaluationSchema } from "@/lib/ai/schemas/evaluation";
 
 function extractJson(text: string) {
   const match = text.match(/\{[\s\S]*\}/);
   if (!match) {
-    throw new Error('No JSON found in model response');
+    throw new Error("No JSON found in model response");
   }
 
   return JSON.parse(match[0]);
@@ -19,46 +19,58 @@ export async function POST(req: Request) {
     const result = await generateText({
       model: interviewModel,
       prompt: `
-Return ONLY valid JSON. No markdown. No explanation.
+      You are an API that returns JSON only.
 
-The JSON MUST have exactly these root fields:
-{
-  "score": 1,
-  "strengths": ["string"],
-  "weaknesses": ["string"],
-  "seniorAnswer": "string",
-  "followUpQuestion": "string"
-}
+       Return ONLY this JSON object. No markdown. No explanation. No text before or after.
+       {
+         "score": 1,
+         "strengths": [],
+        "weaknesses": [],
+        "seniorAnswer": "",
+        "followUpQuestion": ""
+      }
 
-Rules:
-- score must be from 1 to 10
-- do not wrap result in "evaluation"
-- do not add extra root keys
+      Evaluate this answer:
 
-Topic: ${topic || 'React'}
-Level: ${level || 'senior'}
+      Topic: ${topic || "React"}
+      Level: ${level || "senior"}
 
-Question:
-${question || 'Unknown question'}
+      Question:
+      ${question || "Unknown question"}
 
-Candidate answer:
-${answer}
-`,
+      Candidate answer:
+      ${answer}
+      `,
     });
 
-    const parsed = extractJson(result.text);
-    const evaluation = evaluationSchema.parse(parsed);
+    const evaluation = safeParseEvaluation(result.text);
 
     return Response.json(evaluation);
   } catch (error) {
-    console.error('Evaluate route error:', error);
+    console.error("Evaluate route error:", error);
 
     return Response.json(
       {
-        error: 'Evaluation failed',
+        error: "Evaluation failed",
         details: error instanceof Error ? error.message : String(error),
       },
       { status: 500 },
     );
   }
+}
+
+function safeParseEvaluation(text: string) {
+  const match = text.match(/\{[\s\S]*\}/);
+
+  if (!match) {
+    return {
+      score: 1,
+      strengths: [],
+      weaknesses: ["The model did not return valid JSON."],
+      seniorAnswer: text || "No evaluation returned.",
+      followUpQuestion: "Can you explain your answer again with more detail?",
+    };
+  }
+
+  return evaluationSchema.parse(JSON.parse(match[0]));
 }

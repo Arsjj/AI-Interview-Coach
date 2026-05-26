@@ -1,30 +1,29 @@
-import { convertToModelMessages, streamText, UIMessage, stepCountIs } from "ai";
-
-import { interviewModel } from "@/lib/ai/model";
-import { generateQuestionTool } from "@/lib/ai/tools/generateQuestion";
+// app/api/chat/route.ts
+import { convertToModelMessages, streamText, UIMessage } from 'ai';
+import { interviewModel } from '@/lib/ai/model';
+import { getInterviewSystemPrompt } from '@/lib/ai/prompts';
 
 export async function POST(req: Request) {
-  const { messages, topic }: { messages: UIMessage[]; topic?: string } =
-    await req.json();
+  const {
+    messages,
+    topic,
+    level,
+    mode,
+  }: {
+    messages: UIMessage[];
+    topic?: string;
+    level?: string;
+    mode?: string;
+  } = await req.json();
 
   const result = streamText({
     model: interviewModel,
-
-    system: `
-You are a senior interview coach.
-
-If the user wants to start an interview, call generateQuestion.
-After the tool returns a question, show that question to the user.
-Do not only call the tool. Always continue with a final assistant message.
-`,
-
+    system: getInterviewSystemPrompt(
+      topic || 'React',
+      level || 'senior',
+      mode || 'practice',
+    ),
     messages: await convertToModelMessages(messages),
-
-    tools: {
-      generateQuestion: generateQuestionTool,
-    },
-
-    stopWhen: stepCountIs(3),
   });
 
   return result.toUIMessageStreamResponse();
