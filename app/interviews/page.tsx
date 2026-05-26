@@ -1,11 +1,18 @@
 // app/interviews/page.tsx
+import { auth } from '@/auth';
 import { DeleteSessionButton } from '@/components/interview/DeleteSessionButton';
 import { getInterviewSessions } from '@/lib/services/interview-service';
 import Link from 'next/link';
 
 export default async function InterviewsPage() {
-  const sessions = await getInterviewSessions();
-  console.log(sessions);
+  const session = await auth();
+
+  if (!session?.user?.email) {
+    return
+    // redirect('/api/auth/signin');
+  }
+
+  const sessions = await getInterviewSessions(session.user.email);
 
 
   return (

@@ -7,19 +7,21 @@ export async function createInterviewSession(data: {
   topic: string;
   level: "junior" | "middle" | "senior";
   mode: "practice" | "mock" | "deep-dive";
+  userId: string
 }) {
   const [session] = await db.insert(interviewSessions).values(data).returning();
 
   return session;
 }
 
-export async function getInterviewSessions() {
+// lib/services/interview-service.ts
+export async function getInterviewSessions(userId: string) {
   return db
     .select()
     .from(interviewSessions)
+    .where(eq(interviewSessions.userId, userId))
     .orderBy(desc(interviewSessions.createdAt));
 }
-
 export async function getInterviewSessionById(sessionId: string) {
   const [session] = await db
     .select()
