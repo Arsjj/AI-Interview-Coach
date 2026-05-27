@@ -1,4 +1,4 @@
-import { avg, desc, eq } from "drizzle-orm";
+import { avg, desc, eq, inArray } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { interviewAnswers, interviewSessions } from "@/lib/db/schema";
 import type { Evaluation } from "@/lib/ai/schemas/evaluation";
@@ -7,7 +7,7 @@ export async function createInterviewSession(data: {
   topic: string;
   level: "junior" | "middle" | "senior";
   mode: "practice" | "mock" | "deep-dive";
-  userId: string
+  userId: string;
 }) {
   const [session] = await db.insert(interviewSessions).values(data).returning();
 
@@ -107,14 +107,25 @@ export async function deleteInterviewSession(sessionId: string) {
   return deletedSession ?? null;
 }
 
-
 export async function getInterviewDashboardStats(userId: string) {
   const sessions = await getInterviewSessions(userId);
+
+  const sessionIds = sessions.map((session) => session.id);
+
+  const answers =
+    sessionIds.length === 0
+      ? []
+      : await db
+          .select()
+          .from(interviewAnswers)
+          .where(inArray(interviewAnswers.sessionId, sessionIds));
+
+  const totalAnswers = answers.length;
 
   const totalSessions = sessions.length;
 
   const completedSessions = sessions.filter(
-    (session) => session.status === 'completed',
+    (session) => session.status === "completed",
   ).length;
 
   const scoredSessions = sessions.filter(
@@ -131,9 +142,30 @@ export async function getInterviewDashboardStats(userId: string) {
           ) / scoredSessions.length,
         );
 
+  const topicScores = new Map<string, number[]>();
+
+  for (const session of scoredSessions) {
+    const scores = topicScores.get(session.topic) ?? [];
+    scores.push(session.averageScore || 0);
+    topicScores.set(session.topic, scores);
+  }
+
+  const topicAverages = [...topicScores.entries()].map(([topic, scores]) => ({
+    topic,
+    average: Math.round(
+      scores.reduce((sum, score) => sum + score, 0) / scores.length,
+    ),
+  }));
+
+  const bestTopic = topicAverages.sort((a, b) => b.average - a.average)[0];
+  const weakestTopic = topicAverages.sort((a, b) => a.average - b.average)[0];
+
   return {
     totalSessions,
     completedSessions,
     averageScore,
+    bestTopic,
+    weakestTopic,
+    totalAnswers
   };
 }

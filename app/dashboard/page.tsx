@@ -53,6 +53,35 @@ export default async function DashboardPage() {
                             {stats.averageScore || '—'}
                         </p>
                     </div>
+                    <div className="rounded-2xl border border-slate-200 bg-white p-5 dark:border-white/10 dark:bg-slate-900">
+                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                            Best topic
+                        </p>
+                        <p className="mt-2 text-2xl font-bold">
+                            {stats.bestTopic
+                                ? `${stats.bestTopic.topic} (${stats.bestTopic.average})`
+                                : '—'}
+                        </p>
+                    </div>
+
+                    <div className="rounded-2xl border border-slate-200 bg-white p-5 dark:border-white/10 dark:bg-slate-900">
+                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                            Weakest topic
+                        </p>
+                        <p className="mt-2 text-2xl font-bold">
+                            {stats.weakestTopic
+                                ? `${stats.weakestTopic.topic} (${stats.weakestTopic.average})`
+                                : '—'}
+                        </p>
+                    </div>
+                    <div className="rounded-2xl border border-slate-200 bg-white p-5 dark:border-white/10 dark:bg-slate-900">
+                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                            Total answers
+                        </p>
+                        <p className="mt-2 text-3xl font-bold">
+                            {stats.totalAnswers}
+                        </p>
+                    </div>
                 </section>
             </div>
         </main>

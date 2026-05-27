@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { TopicSelector } from '@/components/interview/TopicSelector';
 import { MessageList } from './MessageList';
 import { ChatInput } from './ChatInput';
@@ -29,7 +29,6 @@ export function ChatWindow() {
     mode,
     setMode,
     sessionId,
-    setSessionId,
     createSession,
     completeSession
   } = useInterviewSession();
