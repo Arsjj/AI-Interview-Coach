@@ -1,6 +1,8 @@
+import { Evaluation } from "@/lib/validations/interview";
+
 type Props = {
   open: boolean;
-  evaluation: any,
+  evaluation: Evaluation,
   onClose: () => void;
 };
 

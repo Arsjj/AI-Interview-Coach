@@ -1,10 +1,11 @@
 // lib/validations/interview.ts
-import { z } from 'zod';
+import { z } from "zod";
+import { evaluationSchema } from "../ai/schemas/evaluation";
 
 export const createInterviewSessionSchema = z.object({
   topic: z.string().min(1),
-  level: z.enum(['junior', 'middle', 'senior']),
-  mode: z.enum(['practice', 'mock', 'deep-dive']),
+  level: z.enum(["junior", "middle", "senior"]),
+  mode: z.enum(["practice", "mock", "deep-dive"]),
 });
 
 export const saveInterviewAnswerSchema = z.object({
@@ -16,3 +17,6 @@ export const saveInterviewAnswerSchema = z.object({
   seniorAnswer: z.string(),
   followUpQuestion: z.string(),
 });
+
+// lib/validations/interview.ts
+export type Evaluation = z.infer<typeof evaluationSchema>;
