@@ -1,6 +1,5 @@
 import { INTERVIEW_TOPICS } from "@/constants/interview-topics";
 
-
 type Props = {
   value: string;
   onChange: (topic: string) => void;

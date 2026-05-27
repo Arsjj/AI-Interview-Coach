@@ -1,16 +1,6 @@
-// app/api/evaluate/route.ts
 import { generateText } from "ai";
 import { interviewModel } from "@/lib/ai/model";
 import { evaluationSchema } from "@/lib/ai/schemas/evaluation";
-
-function extractJson(text: string) {
-  const match = text.match(/\{[\s\S]*\}/);
-  if (!match) {
-    throw new Error("No JSON found in model response");
-  }
-
-  return JSON.parse(match[0]);
-}
 
 export async function POST(req: Request) {
   try {

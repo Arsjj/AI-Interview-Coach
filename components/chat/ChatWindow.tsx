@@ -12,9 +12,7 @@ import { SessionStats } from '../interview/SessionStates';
 import { ModeSelector } from '../interview/ModeSelector';
 
 export function ChatWindow() {
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const messagesContainerRef = useRef<HTMLDivElement>(null);
-  const isDark = theme === 'dark';
 
   const {
     topic,
@@ -77,17 +75,8 @@ export function ChatWindow() {
 
 
   return (
-    <main className={isDark ? 'dark' : ''}>
+    <main>
       <div className="min-h-screen bg-slate-100 px-4 py-8 text-slate-950 dark:bg-slate-950 dark:text-white">
-        <button
-          type="button"
-          onClick={() =>
-            setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))
-          }
-          className="absolute right-4 rounded-xl border border-slate-300 px-4 py-3 text-sm dark:border-white/10"
-        >
-          {isDark ? 'Light' : 'Dark'}
-        </button>
         <section className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-4xl flex-col rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl dark:border-white/10 dark:bg-slate-900/80">
           <header className="mb-6 flex items-center justify-between gap-4">
             <SessionStats

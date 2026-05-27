@@ -1,5 +1,9 @@
 // app/api/interview/sessions/[sessionId]/answers/route.ts
-import { saveInterviewAnswer } from '@/lib/services/interview-service';
+import { created } from "@/lib/api/responses";
+import { errorResponse } from "@/lib/auth/error-response";
+import { requireSessionOwner } from "@/lib/auth/ownership";
+import { saveInterviewAnswer } from "@/lib/services/interview-service";
+import { saveInterviewAnswerSchema } from "@/lib/validations/interview";
 
 type Params = {
   params: Promise<{
@@ -10,6 +14,8 @@ type Params = {
 export async function POST(req: Request, { params }: Params) {
   try {
     const { sessionId } = await params;
+    await requireSessionOwner(sessionId);
+    const body = saveInterviewAnswerSchema.parse(await req.json());
 
     const {
       question,
@@ -19,7 +25,7 @@ export async function POST(req: Request, { params }: Params) {
       weaknesses,
       seniorAnswer,
       followUpQuestion,
-    } = await req.json();
+    } = body;
 
     const savedAnswer = await saveInterviewAnswer({
       sessionId,
@@ -34,13 +40,9 @@ export async function POST(req: Request, { params }: Params) {
       },
     });
 
-    return Response.json(savedAnswer);
+    return created(savedAnswer);
   } catch (error) {
-    console.error('Save answer error:', error);
-
-    return Response.json(
-      { error: 'Failed to save answer' },
-      { status: 500 },
-    );
+    console.error("Save answer error:", error);
+    return errorResponse(error);
   }
 }

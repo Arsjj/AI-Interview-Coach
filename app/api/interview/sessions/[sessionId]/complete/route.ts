@@ -1,4 +1,6 @@
-import { completeInterviewSession } from '@/lib/services/interview-service';
+import { success } from "@/lib/api/responses";
+import { errorResponse } from "@/lib/auth/error-response";
+import { completeInterviewSession } from "@/lib/services/interview-service";
 
 type Params = {
   params: Promise<{
@@ -12,13 +14,9 @@ export async function PATCH(_: Request, { params }: Params) {
 
     const session = await completeInterviewSession(sessionId);
 
-    return Response.json(session);
+    return success(session);
   } catch (error) {
-    console.error('Complete session error:', error);
-
-    return Response.json(
-      { error: 'Failed to complete session' },
-      { status: 500 },
-    );
+    console.error("Complete session error:", error);
+    return errorResponse(error);
   }
 }

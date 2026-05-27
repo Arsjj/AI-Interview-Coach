@@ -1,4 +1,3 @@
-// components/interview/SessionStats.tsx
 type Props = {
   answeredCount: number;
   averageScore: number;

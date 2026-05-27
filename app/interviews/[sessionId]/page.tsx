@@ -1,6 +1,7 @@
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { getInterviewAnswers, getInterviewSessionById } from '@/lib/services/interview-service';
 import InterviewDetailUi from '@/components/interview/InterviewDetailUi';
+import { auth } from '@/auth';
 
 type Props = {
   params: Promise<{
@@ -9,9 +10,17 @@ type Props = {
 };
 
 export default async function InterviewDetailPage({ params }: Props) {
+  const userSession = await auth();
   const { sessionId } = await params;
-  const session = await getInterviewSessionById(sessionId)
-  if (!session) return notFound()
+  if (!userSession?.user?.email) {
+    redirect('/api/auth/signin');
+  }
+
+  const session = await getInterviewSessionById(sessionId);
+
+  if (!session || session.userId !== userSession.user.email) {
+    redirect('/api/auth/signin');
+  }
   const answers = await getInterviewAnswers(sessionId)
 
   return (

@@ -104,5 +104,36 @@ export async function deleteInterviewSession(sessionId: string) {
     .where(eq(interviewSessions.id, sessionId))
     .returning();
 
-  return deletedSession;
+  return deletedSession ?? null;
+}
+
+
+export async function getInterviewDashboardStats(userId: string) {
+  const sessions = await getInterviewSessions(userId);
+
+  const totalSessions = sessions.length;
+
+  const completedSessions = sessions.filter(
+    (session) => session.status === 'completed',
+  ).length;
+
+  const scoredSessions = sessions.filter(
+    (session) => session.averageScore !== null,
+  );
+
+  const averageScore =
+    scoredSessions.length === 0
+      ? 0
+      : Math.round(
+          scoredSessions.reduce(
+            (sum, session) => sum + (session.averageScore || 0),
+            0,
+          ) / scoredSessions.length,
+        );
+
+  return {
+    totalSessions,
+    completedSessions,
+    averageScore,
+  };
 }
