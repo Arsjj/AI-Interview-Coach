@@ -34,8 +34,10 @@ export default function RootLayout({
     >
       <body className="h-screen flex flex-col overflow-x-hidden">
         <NextTopLoader
-          color="#3b82f6"
-          showSpinner={false}
+         color="#22d3ee"
+  // shadow="0 0 10px #22d3ee"
+  // height={3}
+  showSpinner={false}
         />
         <ThemeProvider>
           <Header />
