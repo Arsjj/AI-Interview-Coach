@@ -21,7 +21,7 @@ import Link from "next/link"
 function InterviewDetailUi({ answers, session }: InterviewDetailUiProps) {
     const router = useRouter()
     return (
-        <main className="min-h-screen bg-slate-100 p-6 text-slate-950 dark:bg-slate-950 dark:text-white">
+        <main className="h-screen overflow-auto bg-slate-100 p-6 text-slate-950 dark:bg-slate-950 dark:text-white">
             <div className="mx-auto max-w-4xl">
                 <Link
                     href="/interviews"

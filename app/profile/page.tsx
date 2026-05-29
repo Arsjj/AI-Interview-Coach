@@ -8,7 +8,7 @@ export default async function ProfilePage() {
   const stats = await getInterviewDashboardStats(user.email);
 
   return (
-    <main className="min-h-screen bg-slate-100 p-6 text-slate-950 dark:bg-slate-950 dark:text-white">
+    <main className="h-screen overflow-auto bg-slate-100 p-6 text-slate-950 dark:bg-slate-950 dark:text-white">
       <div className="mx-auto max-w-4xl">
         <h1 className="text-3xl font-bold">Profile</h1>
 

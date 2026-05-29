@@ -166,6 +166,6 @@ export async function getInterviewDashboardStats(userId: string) {
     averageScore,
     bestTopic,
     weakestTopic,
-    totalAnswers
+    totalAnswers,
   };
 }

@@ -8,7 +8,7 @@ export default async function DashboardPage() {
     const stats = await getInterviewDashboardStats(user.email);
 
     return (
-        <main className="min-h-screen bg-slate-100 p-6 text-slate-950 dark:bg-slate-950 dark:text-white">
+        <main className="h-screen bg-slate-100 p-6 text-slate-950 dark:bg-slate-950 dark:text-white">
             <div className="mx-auto max-w-5xl">
                 <div className="flex items-center justify-between">
                     <div>

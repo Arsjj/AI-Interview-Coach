@@ -7,10 +7,6 @@ type Props = {
 };
 
 export function EvaluationDrawer({ open, evaluation, onClose }: Props) {
-  if (!evaluation) {
-    return <p>No evaluation yet.</p>
-  }
-
   return (
     <>
       <div
