@@ -44,6 +44,7 @@ export function ChatWindowUI({ logged }: { logged: string | null | undefined }) 
         startInterview,
 
     } = useInterviewChat({ topic, level })
+    const hasActiveSession = Boolean(sessionId)
 
     function resetInterview() {
         setMessages([]);
@@ -53,7 +54,6 @@ export function ChatWindowUI({ logged }: { logged: string | null | undefined }) 
     function scrollToBottom() {
         messagesContainerRef.current?.scrollTo({
             top: messagesContainerRef.current.scrollHeight,
-            behavior: 'smooth',
         });
     }
 
@@ -63,7 +63,6 @@ export function ChatWindowUI({ logged }: { logged: string | null | undefined }) 
         if (!activeSessionId) {
             activeSessionId = await createSession();
         }
-
         if (!activeSessionId) return;
 
         startInterview();
@@ -76,7 +75,7 @@ export function ChatWindowUI({ logged }: { logged: string | null | undefined }) 
 
     return (
         <main className="flex-1 min-h-0 px-4 py-8 text-slate-950 dark:bg-slate-950 dark:text-white">
-            <section className="h-full min-h-0 mx-auto flex max-w-4xl flex-col rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl dark:border-white/10 dark:bg-slate-900/80">
+            <section className="chat-window animate-chat-appear h-full min-h-0 mx-auto flex max-w-4xl flex-col rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl dark:border-white/10 dark:bg-slate-900/80">
                 {logged &&
                     <header className="mb-6 flex justify-between gap-4">
                         <SessionStats
@@ -95,7 +94,7 @@ export function ChatWindowUI({ logged }: { logged: string | null | undefined }) 
 
                 <div
                     ref={messagesContainerRef}
-                    className="h-full overflow-y-auto rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-slate-950/70">
+                    className="hide-scrollbar h-full overflow-y-auto rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-slate-950/70">
                     <MessageList messages={messages} />
                 </div>
 
@@ -111,40 +110,44 @@ export function ChatWindowUI({ logged }: { logged: string | null | undefined }) 
                             <button
                                 type="button"
                                 onClick={() => evaluateAnswer(messages)}
-                                className="w-fit rounded-xl border border-slate-300 px-4 py-3 text-sm dark:border-white/10"
+                                disabled={!hasActiveSession || isLoading}
+                                className="w-fit rounded-xl border border-slate-300 px-4 py-3 text-sm dark:border-white/10 disabled:cursor-not-allowed disabled:opacity-50"
                             >
                                 Evaluate last answer
                             </button>
                             <button
                                 type="button"
                                 onClick={resetInterview}
-                                className="rounded-xl border border-slate-300 hover:-bg- px-4 py-3 text-sm dark:border-white/10"
+                                disabled={!hasActiveSession || isLoading}
+                                className="rounded-xl border border-slate-300 hover:-bg- px-4 py-3 text-sm dark:border-white/10 disabled:cursor-not-allowed disabled:opacity-50"
                             >
                                 New interview
                             </button>
                             <button
                                 type="button"
                                 onClick={completeSession}
-                                disabled={!sessionId}
-                                className="rounded-xl border border-slate-300 px-4 py-3 text-sm dark:border-white/10"
+                                disabled={!hasActiveSession || isLoading}
+                                className="rounded-xl border border-slate-300 px-4 py-3 text-sm dark:border-white/10 disabled:cursor-not-allowed disabled:opacity-50"
                             >
                                 Finish interview
                             </button>
                             <button
                                 type="button"
                                 onClick={handleStartInterview}
-                                className="rounded-xl px-4 py-3 text-sm dark:border-white/10"
+                                className="rounded-xl px-4 py-3 text-sm dark:border-white/10 cursor-pointer"
 
                             >
                                 Start interview
                             </button>
                         </div>
-
-                        <EvaluationDrawer
-                            open={isEvaluationOpen}
-                            evaluation={evaluation}
-                            onClose={() => setIsEvaluationOpen(false)}
-                        />
+                        {
+                            evaluation &&
+                            <EvaluationDrawer
+                                open={isEvaluationOpen}
+                                evaluation={evaluation}
+                                onClose={() => setIsEvaluationOpen(false)}
+                            />
+                        }
                     </>
                 }
             </section>

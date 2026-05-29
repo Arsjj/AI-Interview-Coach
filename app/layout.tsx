@@ -4,6 +4,7 @@ import "./globals.css";
 
 import { Header } from "@/components/layout/Header";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import NextTopLoader from 'nextjs-toploader';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,8 +32,12 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="h-screen flex flex-col">
-         <ThemeProvider>
+      <body className="h-screen flex flex-col overflow-x-hidden">
+        <NextTopLoader
+          color="#3b82f6"
+          showSpinner={false}
+        />
+        <ThemeProvider>
           <Header />
           {children}
         </ThemeProvider>
