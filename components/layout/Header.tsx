@@ -17,8 +17,9 @@ export async function Header() {
                     <Link href="/" className="text-lg font-bold">
                         AI Interview Coach
                     </Link>
-                    <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-                        Practice frontend interviews with instant AI feedback.
+                    <p className="flex items-center gap-2 mt-1 text-sm text-slate-500 dark:text-slate-400">
+                        Practice frontend interviews with instant AI feedback
+                        <ThemeToggle />
                     </p>
                 </div>
                 {session?.user?.email ? (
@@ -27,9 +28,6 @@ export async function Header() {
                     <SignInButton />
                 )}
             </div>
-            {/* <div className='absolute right-2 top-2'>
-                <ThemeToggle />
-            </div> */}
         </header>
     );
 }
