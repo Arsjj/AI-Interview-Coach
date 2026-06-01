@@ -10,19 +10,19 @@ export function MessageItem({ message }: Props) {
   return (
     <div className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
       <div
-        className={`max-w-[75%] rounded-2xl border px-4 py-3 text-sm leading-6 ${
+        className={`max-w-[92%] rounded-2xl border px-3 py-2.5 text-sm leading-6 sm:max-w-[75%] sm:px-4 sm:py-3 ${
           isUser
             ? 'border-blue-200 bg-blue-50 text-slate-950 dark:border-blue-400/20 dark:bg-blue-500/15 dark:text-white'
             : 'border-slate-200 bg-white text-slate-950 dark:border-white/10 dark:bg-white/10 dark:text-white'
         }`}
       >
-        <p className="mb-2 text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+        <p className="mb-1.5 text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400 sm:mb-2">
           {isUser ? 'You' : 'AI Coach'}
         </p>
 
         {message.parts.map((part, index) =>
           part.type === 'text' ? (
-            <div key={index} className="whitespace-pre-wrap">
+            <div key={index} className="whitespace-pre-wrap break-words">
               {part.text}
             </div>
           ) : null,

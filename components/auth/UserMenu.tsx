@@ -63,7 +63,7 @@ export function UserMenu({ user }: Props) {
             </button>
 
             {open && (
-                <div className="absolute right-0 top-12 z-50 w-80 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl dark:border-white/10 dark:bg-slate-900">
+                <div className="absolute right-0 top-12 z-50 w-[min(20rem,calc(100vw-2rem))] overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl dark:border-white/10 dark:bg-slate-900">
                     <div className="p-6 text-center">
                         <p className="text-sm text-slate-500 dark:text-slate-400">
                             {user.email}

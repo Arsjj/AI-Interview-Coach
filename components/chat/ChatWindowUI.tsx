@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { TopicSelector } from '@/components/interview/TopicSelector';
 import { MessageList } from './MessageList';
 import { ChatInput } from './ChatInput';
@@ -11,6 +11,8 @@ import { useInterviewChat } from '@/hooks/useInterviewChat';
 import { SessionStats } from '../interview/SessionStates';
 import { ModeSelector } from '../interview/ModeSelector';
 
+const actionButtonClass =
+    'rounded-xl border border-slate-300 px-3 py-2.5 text-sm dark:border-white/10 disabled:cursor-not-allowed disabled:opacity-50 sm:px-4 sm:py-3';
 
 export function ChatWindowUI({ logged }: { logged: string | null | undefined }) {
     const messagesContainerRef = useRef<HTMLDivElement>(null);
@@ -42,9 +44,9 @@ export function ChatWindowUI({ logged }: { logged: string | null | undefined }) 
         isLoading,
         handleSubmit,
         startInterview,
+    } = useInterviewChat({ topic, level });
 
-    } = useInterviewChat({ topic, level })
-    const hasActiveSession = Boolean(sessionId)
+    const hasActiveSession = Boolean(sessionId);
 
     function resetInterview() {
         setMessages([]);
@@ -72,29 +74,28 @@ export function ChatWindowUI({ logged }: { logged: string | null | undefined }) 
         scrollToBottom();
     }, [messages]);
 
-
     return (
-        <main className="flex-1 min-h-0 px-4 py-8 text-slate-950 dark:bg-slate-950 dark:text-white">
-            <section className="chat-window animate-chat-appear h-full min-h-0 mx-auto flex max-w-4xl flex-col rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl dark:border-white/10 dark:bg-slate-900/80">
-                {logged &&
-                    <header className="mb-6 flex justify-between gap-4">
+        <main className="flex min-h-0 flex-1 flex-col px-3 py-3 text-slate-950 dark:text-white sm:px-4 sm:py-6 md:py-8">
+            <section className="chat-window animate-chat-appear mx-auto flex h-full min-h-0 w-full max-w-4xl flex-col rounded-2xl border border-slate-200 bg-white p-3 shadow-xl dark:border-white/10 dark:bg-slate-900/80 sm:rounded-3xl sm:p-4 sm:shadow-2xl md:p-6">
+                {logged && (
+                    <header className="mb-4 flex shrink-0 flex-col gap-3 sm:mb-6 sm:flex-row sm:items-start sm:justify-between">
                         <SessionStats
                             answeredCount={answeredCount}
                             averageScore={averageScore}
                         />
 
-
-                        <div className="flex h-fit gap-3">
+                        <InterviewSettings>
                             <ModeSelector value={mode} onChange={setMode} />
                             <LevelSelector value={level} onChange={setLevel} />
                             <TopicSelector value={topic} onChange={setTopic} />
-                        </div>
+                        </InterviewSettings>
                     </header>
-                }
+                )}
 
                 <div
                     ref={messagesContainerRef}
-                    className="hide-scrollbar h-full overflow-y-auto rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-slate-950/70">
+                    className="hide-scrollbar min-h-0 flex-1 overflow-y-auto rounded-xl border border-slate-200 bg-slate-50 p-3 dark:border-white/10 dark:bg-slate-950/70 sm:rounded-2xl sm:p-4"
+                >
                     <MessageList messages={messages} />
                 </div>
 
@@ -104,22 +105,23 @@ export function ChatWindowUI({ logged }: { logged: string | null | undefined }) 
                     onChange={setInput}
                     onSubmit={handleSubmit}
                 />
-                {logged &&
+
+                {logged && (
                     <>
-                        <div className='flex gap-2 pt-4'>
+                        <div className="grid shrink-0 grid-cols-2 gap-2 pt-3 sm:flex sm:flex-wrap sm:pt-4">
                             <button
                                 type="button"
                                 onClick={() => evaluateAnswer(messages)}
                                 disabled={!hasActiveSession || isLoading}
-                                className="w-fit rounded-xl border border-slate-300 px-4 py-3 text-sm dark:border-white/10 disabled:cursor-not-allowed disabled:opacity-50"
+                                className={actionButtonClass}
                             >
-                                Evaluate last answer
+                                Evaluate
                             </button>
                             <button
                                 type="button"
                                 onClick={resetInterview}
                                 disabled={!hasActiveSession || isLoading}
-                                className="rounded-xl border border-slate-300 hover:-bg- px-4 py-3 text-sm dark:border-white/10 disabled:cursor-not-allowed disabled:opacity-50"
+                                className={actionButtonClass}
                             >
                                 New interview
                             </button>
@@ -127,32 +129,56 @@ export function ChatWindowUI({ logged }: { logged: string | null | undefined }) 
                                 type="button"
                                 onClick={completeSession}
                                 disabled={!hasActiveSession || isLoading}
-                                className="rounded-xl border border-slate-300 px-4 py-3 text-sm dark:border-white/10 disabled:cursor-not-allowed disabled:opacity-50"
+                                className={actionButtonClass}
                             >
-                                Finish interview
+                                Finish
                             </button>
                             <button
                                 type="button"
                                 onClick={handleStartInterview}
-                                className="rounded-xl px-4 py-3 text-sm dark:border-white/10 cursor-pointer"
-
+                                className="col-span-2 rounded-xl bg-blue-500 px-3 py-2.5 text-sm font-medium text-white hover:bg-blue-400 sm:col-span-1 sm:px-4 sm:py-3"
                             >
                                 Start interview
                             </button>
                         </div>
-                        {
-                            evaluation &&
+                        {evaluation && (
                             <EvaluationDrawer
                                 open={isEvaluationOpen}
                                 evaluation={evaluation}
                                 onClose={() => setIsEvaluationOpen(false)}
                             />
-                        }
+                        )}
                     </>
-                }
+                )}
             </section>
         </main>
     );
 }
 
+type Props = {
+    children: React.ReactNode;
+};
 
+export function InterviewSettings({ children }: Props) {
+    const [open, setOpen] = useState(false);
+
+    return (
+        <div className="relative w-full">
+            <button
+                type="button"
+                onClick={() => setOpen((prev) => !prev)}
+                className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm dark:border-white/10 sm:py-3"
+            >
+                Interview settings
+            </button>
+
+            {open && (
+                <div className="absolute left-0 right-0 top-[calc(100%+0.5rem)] z-50 rounded-2xl border border-slate-200 bg-white p-4 shadow-xl dark:border-white/10 dark:bg-slate-900 sm:left-auto sm:right-0 sm:w-96">
+                    <div className="grid gap-3">
+                        {children}
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+}
