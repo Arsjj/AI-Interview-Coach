@@ -18,7 +18,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <ThemeContext.Provider value={{ isDark, toggleTheme }}>
-      <div className={`flex flex-col h-screen dark:bg-slate-950 ${isDark ? 'dark' : ''} flex h-dvh flex-col`}>{children}</div>
+      <div className={`flex flex-col h-dvh dark:bg-slate-950 ${isDark ? 'dark' : ''}`}>{children}</div>
     </ThemeContext.Provider>
   );
 }

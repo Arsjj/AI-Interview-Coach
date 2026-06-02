@@ -94,7 +94,7 @@ export function ChatWindowUI({ logged }: { logged: string | null | undefined }) 
 
                 <div
                     ref={messagesContainerRef}
-                    className="hide-scrollbar min-h-0 flex-1 overflow-y-auto rounded-xl border border-slate-200 bg-slate-50 p-3 dark:border-white/10 dark:bg-slate-950/70 sm:rounded-2xl sm:p-4"
+                    className="hide-scrollbar flex-1 overflow-y-auto rounded-xl border border-slate-200 bg-slate-50 p-3 dark:border-white/10 dark:bg-slate-950/70 sm:rounded-2xl sm:p-4"
                 >
                     <MessageList messages={messages} />
                 </div>
