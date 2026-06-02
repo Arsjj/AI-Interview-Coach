@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { TopicSelector } from '@/components/interview/TopicSelector';
 import { MessageList } from './MessageList';
-import { ChatInput } from './ChatInput';
+import { ChatInput, MobileChatInput } from './ChatInput';
 import { EvaluationDrawer } from '../interview/EvaluationDialog';
 import { LevelSelector } from '../interview/LevelSelector';
 import { useInterviewSession } from '@/hooks/useInterviewSession';
@@ -12,11 +12,10 @@ import { SessionStats } from '../interview/SessionStates';
 import { ModeSelector } from '../interview/ModeSelector';
 
 const actionButtonClass =
-    'rounded-xl border border-slate-300 px-3 py-2.5 text-sm dark:border-white/10 disabled:cursor-not-allowed disabled:opacity-50 sm:px-4 sm:py-3';
+    'rounded-xl border border-slate-300 px-2 py-2 text-sm dark:border-white/10 disabled:cursor-not-allowed disabled:opacity-50 sm:px-4 sm:py-3';
 
 export function ChatWindowUI({ logged }: { logged: string | null | undefined }) {
     const messagesContainerRef = useRef<HTMLDivElement>(null);
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     const {
         topic,
@@ -34,7 +33,6 @@ export function ChatWindowUI({ logged }: { logged: string | null | undefined }) 
         setMode,
         sessionId,
         createSession,
-        completeSession
     } = useInterviewSession();
 
     const {
@@ -75,75 +73,21 @@ export function ChatWindowUI({ logged }: { logged: string | null | undefined }) 
         scrollToBottom();
     }, [messages]);
 
-    const interviewSettings = (
-        <>
-            <ModeSelector value={mode} onChange={setMode} />
-            <LevelSelector value={level} onChange={setLevel} />
-            <TopicSelector value={topic} onChange={setTopic} />
-        </>
-    );
-
     return (
         <main className="flex min-h-0 flex-1 flex-col px-3 py-3 text-slate-950 dark:text-white sm:px-4 sm:py-6 md:py-8">
-            <section className="chat-window animate-chat-appear mx-auto flex h-full min-h-0 w-full max-w-4xl flex-col rounded-2xl border border-slate-200 bg-white p-3 shadow-xl dark:border-white/10 dark:bg-slate-900/80 sm:rounded-3xl sm:p-4 sm:shadow-2xl md:p-6">
+            <section className="chat-window animate-chat-appear mx-auto flex h-full min-h-0 w-full max-w-5xl flex-col rounded-2xl border border-slate-200 bg-white p-3 shadow-xl dark:border-white/10 dark:bg-slate-900/80 sm:rounded-3xl sm:p-4 sm:shadow-2xl md:p-6">
                 {logged && (
                     <>
-                        <header className="mb-4 flex shrink-0 items-center justify-between sm:hidden">
-                            <div className="min-w-0">
-                                <p className="text-sm font-semibold">Session</p>
-                                <p className="truncate text-xs text-slate-500 dark:text-slate-400">
-                                    {topic} · {level} · {mode}
-                                </p>
-                            </div>
-
-                            <button
-                                type="button"
-                                aria-label="Open session menu"
-                                aria-expanded={mobileMenuOpen}
-                                onClick={() => setMobileMenuOpen(true)}
-                                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-300 dark:border-white/10"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    className="h-5 w-5"
-                                    aria-hidden
-                                >
-                                    <path d="M4 5h16M4 12h16M4 19h16" />
-                                </svg>
-                            </button>
-                        </header>
-
-                        <MobileHeaderMenu
-                            open={mobileMenuOpen}
-                            onClose={() => setMobileMenuOpen(false)}
-                        >
+                        <header className="mb-6 max-md:hidden shrink-0 md:flex md:items-start md:justify-between">
                             <SessionStats
                                 answeredCount={answeredCount}
                                 averageScore={averageScore}
                             />
-                            <div className="grid gap-3">
-                                <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">
-                                    Interview settings
-                                </p>
-                                {interviewSettings}
+                            <div className='flex gap-2 w-full max-w-md'>
+                                <ModeSelector value={mode} onChange={setMode} />
+                                <LevelSelector value={level} onChange={setLevel} />
+                                <TopicSelector value={topic} onChange={setTopic} />
                             </div>
-                        </MobileHeaderMenu>
-
-                        <header className="mb-6 hidden shrink-0 sm:flex sm:items-start sm:justify-between">
-                            <SessionStats
-                                answeredCount={answeredCount}
-                                averageScore={averageScore}
-                            />
-
-                            <InterviewSettings>
-                                {interviewSettings}
-                            </InterviewSettings>
                         </header>
                     </>
                 )}
@@ -154,17 +98,25 @@ export function ChatWindowUI({ logged }: { logged: string | null | undefined }) 
                 >
                     <MessageList messages={messages} />
                 </div>
-
-                <ChatInput
-                    value={input}
-                    disabled={isLoading}
-                    onChange={setInput}
-                    onSubmit={handleSubmit}
-                />
-
+                <div className="max-md:hidden">
+                    <ChatInput
+                        value={input}
+                        disabled={isLoading}
+                        onChange={setInput}
+                        onSubmit={handleSubmit}
+                    />
+                </div>
+                <div className='md:hidden'>
+                    <MobileChatInput
+                        value={input}
+                        disabled={isLoading}
+                        onChange={setInput}
+                        onSubmit={handleSubmit}
+                    />
+                </div>
                 {logged && (
                     <>
-                        <div className="grid shrink-0 grid-cols-2 gap-2 pt-3 sm:flex sm:flex-wrap sm:pt-4">
+                        <div className=" gap-2 pt-3 flex sm:pt-4">
                             <button
                                 type="button"
                                 onClick={() => evaluateAnswer(messages)}
@@ -184,7 +136,7 @@ export function ChatWindowUI({ logged }: { logged: string | null | undefined }) 
                             <button
                                 type="button"
                                 onClick={handleStartInterview}
-                                className="col-span-2 rounded-xl bg-blue-500 px-3 py-2.5 text-sm font-medium text-white hover:bg-blue-400 sm:col-span-1 sm:px-4 sm:py-3"
+                                className={`${actionButtonClass} col-span-2 rounded-xl md:bg-blue-500 px-3 py-2.5 text-sm font-medium md:text-white sm:hover:bg-blue-400 sm:col-span-1 sm:px-4 sm:py-3`}
                             >
                                 Start interview
                             </button>
@@ -200,89 +152,5 @@ export function ChatWindowUI({ logged }: { logged: string | null | undefined }) 
                 )}
             </section>
         </main>
-    );
-}
-
-type MobileHeaderMenuProps = {
-    open: boolean;
-    onClose: () => void;
-    children: React.ReactNode;
-};
-
-function MobileHeaderMenu({ open, onClose, children }: MobileHeaderMenuProps) {
-    useEffect(() => {
-        if (!open) return;
-
-        function handleEscape(event: KeyboardEvent) {
-            if (event.key === 'Escape') {
-                onClose();
-            }
-        }
-
-        document.addEventListener('keydown', handleEscape);
-        return () => document.removeEventListener('keydown', handleEscape);
-    }, [open, onClose]);
-
-    return (
-        <>
-            <div
-                onClick={onClose}
-                aria-hidden
-                className={`fixed inset-0 z-40 bg-black/40 transition-opacity sm:hidden ${
-                    open ? 'opacity-100' : 'pointer-events-none opacity-0'
-                }`}
-            />
-
-            <aside
-                aria-hidden={!open}
-                className={`fixed inset-y-0 right-0 z-50 flex w-full max-w-xs flex-col border-l border-slate-200 bg-white shadow-2xl transition-transform duration-300 dark:border-white/10 dark:bg-slate-950 sm:hidden ${
-                    open ? 'translate-x-0' : 'translate-x-full'
-                }`}
-            >
-                <div className="flex shrink-0 items-center justify-between border-b border-slate-200 p-4 dark:border-white/10">
-                    <h2 className="text-lg font-bold">Session menu</h2>
-                    <button
-                        type="button"
-                        aria-label="Close menu"
-                        onClick={onClose}
-                        className="rounded-lg border border-slate-300 px-3 py-2 text-sm dark:border-white/10"
-                    >
-                        Close
-                    </button>
-                </div>
-
-                <div className="hide-scrollbar flex-1 space-y-5 overflow-y-auto p-4 pb-safe">
-                    {children}
-                </div>
-            </aside>
-        </>
-    );
-}
-
-type Props = {
-    children: React.ReactNode;
-};
-
-export function InterviewSettings({ children }: Props) {
-    const [open, setOpen] = useState(false);
-
-    return (
-        <div className="relative w-full sm:w-auto">
-            <button
-                type="button"
-                onClick={() => setOpen((prev) => !prev)}
-                className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm dark:border-white/10 sm:py-3"
-            >
-                Interview settings
-            </button>
-
-            {open && (
-                <div className="absolute left-0 right-0 top-[calc(100%+0.5rem)] z-50 rounded-2xl border border-slate-200 bg-white p-4 shadow-xl dark:border-white/10 dark:bg-slate-900 sm:left-auto sm:right-0 sm:w-96">
-                    <div className="grid gap-3">
-                        {children}
-                    </div>
-                </div>
-            )}
-        </div>
     );
 }

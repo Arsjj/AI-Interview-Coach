@@ -5,7 +5,7 @@ type Props = {
 
 export function SessionStats({ answeredCount, averageScore }: Props) {
   return (
-    <div className="grid w-full grid-cols-2 gap-2 sm:max-w-xs sm:gap-3">
+    <div className="grid w-full grid-cols-2 gap-2 sm:max-w-56 sm:gap-3">
       <div className="rounded-xl border border-slate-200 bg-white p-3 dark:border-white/10 dark:bg-white/5 sm:rounded-2xl sm:p-4">
         <p className="text-xs text-slate-500 dark:text-slate-400">
           Evaluated

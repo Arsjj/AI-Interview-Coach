@@ -3,6 +3,7 @@ import { auth } from '@/auth';
 import { UserMenu } from '../auth/UserMenu';
 import { SignInButton } from '../auth/SignButton';
 import { ThemeToggle } from '../theme/ThemeToggle';
+import { MobileMenu } from './MobileMenu';
 
 export async function Header() {
     const session = await auth();
@@ -24,13 +25,17 @@ export async function Header() {
                         Practice frontend interviews with instant AI feedback
                     </p>
                 </div>
-                <div className="shrink-0">
+                <div className="flex align-center">
                     {session?.user?.email ? (
-                        <UserMenu user={session.user} />
+                        <>
+                            <div className='max-md:hidden'> <UserMenu user={session.user} /> </div>
+                            <div className='md:hidden'><MobileMenu user={session.user}/></div>
+                        </>
                     ) : (
                         <SignInButton />
                     )}
                 </div>
+
             </div>
         </header>
     );
