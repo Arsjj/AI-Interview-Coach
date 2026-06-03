@@ -1,13 +1,14 @@
 import { useChat } from "@ai-sdk/react";
 import { useState } from "react";
-import { InterviewLevel } from "@/constants/interview-topics";
+import { InterviewLevel, InterviewMode, InterviewTopic } from "@/constants/interview-topics";
 
 type Params = {
-  topic: string;
+  topic: InterviewTopic;
   level: InterviewLevel;
+  mode: InterviewMode
 };
 
-export function useInterviewChat({ topic, level }: Params) {
+export function useInterviewChat({ topic, level, mode }: Params) {
   const [input, setInput] = useState("");
 
   const chat = useChat();
@@ -16,7 +17,7 @@ export function useInterviewChat({ topic, level }: Params) {
 
   function startInterview() {
     chat.sendMessage({
-      text: `Ask me one ${level} ${topic} interview question. Only ask the question, do not evaluate yet.`,
+      text: `Ask me one ${level} ${topic} ${mode} interview question. Only ask the question, do not evaluate yet.`,
     });
   }
 
@@ -31,6 +32,7 @@ export function useInterviewChat({ topic, level }: Params) {
         body: {
           topic,
           level,
+          mode
         },
       },
     );

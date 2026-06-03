@@ -3,25 +3,26 @@
 import { useEffect, useRef } from 'react';
 import { TopicSelector } from '@/components/interview/TopicSelector';
 import { MessageList } from './MessageList';
-import { ChatInput, MobileChatInput } from './ChatInput';
+import { ChatInput } from './ChatInput';
 import { EvaluationDrawer } from '../interview/EvaluationDialog';
 import { LevelSelector } from '../interview/LevelSelector';
 import { useInterviewSession } from '@/hooks/useInterviewSession';
 import { useInterviewChat } from '@/hooks/useInterviewChat';
 import { SessionStats } from '../interview/SessionStates';
 import { ModeSelector } from '../interview/ModeSelector';
+import { interviewState } from '@/app/state/interview-state';
+import { useInterviewSettings } from '@/hooks/useInterviewSettings';
 
 const actionButtonClass =
     'rounded-xl border border-slate-300 px-2 py-2 text-sm max-sm:text-[12px] dark:border-white/10 disabled:cursor-not-allowed disabled:opacity-50 sm:px-4 sm:py-3';
 
 export function ChatWindowUI({ logged }: { logged: string | null | undefined }) {
     const messagesContainerRef = useRef<HTMLDivElement>(null);
+    const { mode, level, topic } = interviewState.getSettings()
+    const { handleLevelChange, handleModeChange, handleTopicChange } = useInterviewSettings()
+    
 
     const {
-        topic,
-        setTopic,
-        level,
-        setLevel,
         evaluation,
         isEvaluationOpen,
         setIsEvaluationOpen,
@@ -29,8 +30,6 @@ export function ChatWindowUI({ logged }: { logged: string | null | undefined }) 
         resetEvaluation,
         answeredCount,
         averageScore,
-        mode,
-        setMode,
         sessionId,
         createSession,
     } = useInterviewSession();
@@ -43,7 +42,7 @@ export function ChatWindowUI({ logged }: { logged: string | null | undefined }) 
         isLoading,
         handleSubmit,
         startInterview,
-    } = useInterviewChat({ topic, level });
+    } = useInterviewChat({ topic, level, mode });
 
     const hasActiveSession = Boolean(sessionId);
 
@@ -84,9 +83,9 @@ export function ChatWindowUI({ logged }: { logged: string | null | undefined }) 
                                 averageScore={averageScore}
                             />
                             <div className='flex gap-2 w-full max-w-md'>
-                                <ModeSelector value={mode} onChange={setMode} />
-                                <LevelSelector value={level} onChange={setLevel} />
-                                <TopicSelector value={topic} onChange={setTopic} />
+                                <ModeSelector value={mode} onChange={handleModeChange} />
+                                <LevelSelector value={level} onChange={handleLevelChange} />
+                                <TopicSelector value={topic} onChange={handleTopicChange} />
                             </div>
                         </header>
                     </>
@@ -98,22 +97,12 @@ export function ChatWindowUI({ logged }: { logged: string | null | undefined }) 
                 >
                     <MessageList messages={messages} />
                 </div>
-                <div className="max-md:hidden">
-                    <ChatInput
-                        value={input}
-                        disabled={isLoading}
-                        onChange={setInput}
-                        onSubmit={handleSubmit}
-                    />
-                </div>
-                <div className='md:hidden'>
-                    <MobileChatInput
-                        value={input}
-                        disabled={isLoading}
-                        onChange={setInput}
-                        onSubmit={handleSubmit}
-                    />
-                </div>
+                <ChatInput
+                    value={input}
+                    disabled={isLoading}
+                    onChange={setInput}
+                    onSubmit={handleSubmit}
+                />
                 {logged && (
                     <>
                         <div className=" gap-2 pt-3 flex sm:pt-4">

@@ -1,7 +1,5 @@
 'use client'
-import { useState } from "react";
-import { ListPlus, PanelLeft, Plus } from 'lucide-react';
-import { SlidersHorizontal } from 'lucide-react';
+import { Plus, Send } from 'lucide-react';
 
 type Props = {
   value: string;
@@ -14,59 +12,54 @@ export function ChatInput({ value, disabled, onChange, onSubmit }: Props) {
 
   return (
     <>
-      <form
-        className="mt-3 flex shrink-0 flex-col gap-2 sm:mt-6 sm:flex-row"
-        onSubmit={(e) => {
+      <div className="max-md:hidden">
+        <form
+          className="mt-3 flex shrink-0 flex-col gap-2 sm:mt-6 sm:flex-row"
+          onSubmit={(e) => {
+            e.preventDefault();
+            onSubmit();
+          }}
+        >
+          <input
+            className="flex-1 rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-base text-slate-950 outline-none focus:border-blue-400 dark:border-white/10 dark:bg-slate-800 dark:text-white sm:p-3 sm:text-sm"
+            value={value}
+            placeholder="Ask for a question or write your answer..."
+            onChange={(e) => onChange(e.target.value)}
+          />
+
+          <button
+            type="submit"
+            className="w-full shrink-0 rounded-xl bg-black px-5 py-2.5 text-sm font-medium text-white disabled:opacity-50 sm:w-auto sm:py-3"
+            disabled={disabled}
+          >
+            Send
+          </button>
+        </form>
+      </div>
+      <div className='md:hidden'>
+        <form onSubmit={(e) => {
           e.preventDefault();
           onSubmit();
         }}
-      >
-        <input
-          className="flex-1 rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-base text-slate-950 outline-none focus:border-blue-400 dark:border-white/10 dark:bg-slate-800 dark:text-white sm:p-3 sm:text-sm"
-          value={value}
-          placeholder="Ask for a question or write your answer..."
-          onChange={(e) => onChange(e.target.value)}
-        />
+          className="relative">
+          <div className="flex items-center gap-2 rounded-xl border border-slate-300 bg-white p-2 dark:border-white/10 dark:bg-slate-900">
+            <input
+              value={value}
+              className="flex-1 rounded-xl border-slate-300 bg-white px-3 py-2.5 text-base text-slate-950 outline-none focus:border-blue-400 border-0 dark:bg-slate-800 dark:text-white sm:p-3 sm:text-sm"
+              placeholder="Ask for a question or write your answer..."
+              onChange={(e) => onChange(e.target.value)}
+            />
 
-        <button
-          type="submit"
-          className="w-full shrink-0 rounded-xl bg-black px-5 py-2.5 text-sm font-medium text-white disabled:opacity-50 sm:w-auto sm:py-3"
-          disabled={disabled}
-        >
-          Send
-        </button>
-      </form>
-
+            <button
+              type="submit"
+              disabled={disabled}
+              className="flex h-10 w-10 p-2 shrink-0 items-center justify-center rounded-full bg-blue-500 text-white"
+            >
+              <Send />
+            </button>
+          </div>
+        </form>
+      </div>
     </>
   );
-}
-
-
-
-export function MobileChatInput({ value, disabled, onChange, onSubmit }: Props) {
-
-  return (<>
-    <form onSubmit={(e) => {
-      e.preventDefault();
-      onSubmit();
-    }}
-      className="relative">
-      <div className="flex items-center gap-2 rounded-2xl border border-slate-300 bg-white p-2 dark:border-white/10 dark:bg-slate-900">
-        <input
-          value={value}
-          className="flex-1 rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-base text-slate-950 outline-none focus:border-blue-400 dark:border-white/10 dark:bg-slate-800 dark:text-white sm:p-3 sm:text-sm"
-          placeholder="Ask for a question or write your answer..."
-          onChange={(e) => onChange(e.target.value)}
-        />
-
-        <button
-          type="submit"
-          disabled={disabled}
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-500 text-white"
-        >
-          <Plus />
-        </button>
-      </div>
-    </form>
-  </>)
 }

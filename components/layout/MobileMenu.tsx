@@ -9,6 +9,9 @@ import { SessionStats } from "../interview/SessionStates";
 import { ModeSelector } from "../interview/ModeSelector";
 import { LevelSelector } from "../interview/LevelSelector";
 import { TopicSelector } from "../interview/TopicSelector";
+import { X } from "lucide-react";
+import { useInterviewSettings } from "@/hooks/useInterviewSettings";
+import { interviewState } from "@/app/state/interview-state";
 
 type Props = {
     user: {
@@ -20,25 +23,14 @@ type Props = {
 
 export const MobileMenu = ({ user }: Props) => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const { mode, level, topic } = interviewState.getSettings()
+    const { handleLevelChange, handleModeChange, handleTopicChange } = useInterviewSettings()
 
     const {
-        topic,
-        setTopic,
-        level,
-        setLevel,
         answeredCount,
         averageScore,
-        mode,
-        setMode,
-    } = useInterviewSession();
 
-    const interviewSettings = (
-        <>
-            <ModeSelector value={mode} onChange={setMode} />
-            <LevelSelector value={level} onChange={setLevel} />
-            <TopicSelector value={topic} onChange={setTopic} />
-        </>
-    );
+    } = useInterviewSession();
 
     return (
         <>
@@ -92,7 +84,9 @@ export const MobileMenu = ({ user }: Props) => {
                     <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">
                         Interview settings
                     </p>
-                    {interviewSettings}
+                    <ModeSelector value={mode} onChange={handleModeChange} />
+                    <LevelSelector value={level} onChange={handleLevelChange} />
+                    <TopicSelector value={topic} onChange={handleTopicChange} />
                 </div>
             </MobileHeaderMenu>
         </>
@@ -133,14 +127,14 @@ export function MobileHeaderMenu({ open, onClose, children }: MobileHeaderMenuPr
                     }`}
             >
                 <div className="flex shrink-0 items-center justify-between border-b border-slate-200 p-4 dark:border-white/10">
-                    <h2 className="text-lg font-bold">Session menu</h2>
+                    <h2 className="text-lg font-bold">Menu</h2>
                     <button
                         type="button"
                         aria-label="Close menu"
                         onClick={onClose}
                         className="rounded-lg border border-slate-300 px-3 py-2 text-sm dark:border-white/10"
                     >
-                        Close
+                        <X />
                     </button>
                 </div>
                 <div className="hide-scrollbar flex-1 space-y-5 overflow-y-auto p-4 pb-safe">

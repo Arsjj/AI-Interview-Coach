@@ -1,17 +1,15 @@
 // hooks/useInterviewSession.ts
 import { useState } from "react";
-import { InterviewLevel, InterviewMode } from "@/constants/interview-topics";
 import type { Evaluation } from "@/lib/ai/schemas/evaluation";
 import { UIMessage } from "ai";
+import { interviewState } from "@/app/state/interview-state";
 
 export function useInterviewSession() {
-  const [topic, setTopic] = useState("React");
-  const [level, setLevel] = useState<InterviewLevel>("senior");
   const [evaluation, setEvaluation] = useState<Evaluation | null>(null);
   const [isEvaluationOpen, setIsEvaluationOpen] = useState(false);
   const [scores, setScores] = useState<number[]>([]);
-  const [mode, setMode] = useState<InterviewMode>("practice");
   const [sessionId, setSessionId] = useState<string | null>(null);
+  const { mode, level, topic } = interviewState.getSettings();
 
   const answeredCount = scores.length;
 
@@ -159,12 +157,6 @@ export function useInterviewSession() {
   }
 
   return {
-    topic,
-    setTopic,
-
-    level,
-    setLevel,
-
     evaluation,
     setEvaluation,
 
@@ -177,12 +169,9 @@ export function useInterviewSession() {
     answeredCount,
     averageScore,
 
-    mode,
-    setMode,
-
     sessionId,
     setSessionId,
     createSession,
-    completeSession
+    completeSession,
   };
 }
