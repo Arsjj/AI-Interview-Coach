@@ -12,7 +12,7 @@ import { SessionStats } from '../interview/SessionStates';
 import { ModeSelector } from '../interview/ModeSelector';
 
 const actionButtonClass =
-    'rounded-xl border border-slate-300 px-2 py-2 text-sm dark:border-white/10 disabled:cursor-not-allowed disabled:opacity-50 sm:px-4 sm:py-3';
+    'rounded-xl border border-slate-300 px-2 py-2 text-sm max-sm:text-[12px] dark:border-white/10 disabled:cursor-not-allowed disabled:opacity-50 sm:px-4 sm:py-3';
 
 export function ChatWindowUI({ logged }: { logged: string | null | undefined }) {
     const messagesContainerRef = useRef<HTMLDivElement>(null);
@@ -74,8 +74,8 @@ export function ChatWindowUI({ logged }: { logged: string | null | undefined }) 
     }, [messages]);
 
     return (
-        <main className="flex min-h-0 flex-1 flex-col px-2 py-2 text-slate-950 dark:text-white sm:px-4 sm:py-6 md:py-8">
-            <section className="chat-window animate-chat-appear mx-auto flex h-full min-h-0 w-full max-w-5xl flex-col rounded-2xl border border-slate-200 bg-white p-2 shadow-xl dark:border-white/10 dark:bg-slate-900/80 sm:rounded-3xl sm:p-4 sm:shadow-2xl md:p-6">
+        <main className="flex min-h-0 flex-1 flex-col text-slate-950 dark:text-white sm:px-4 sm:py-6 md:py-8">
+            <section className="chat-window animate-chat-appear mx-auto flex h-full min-h-0 w-full max-w-5xl flex-col border border-slate-200 bg-white p-2 shadow-xl dark:border-white/10 dark:bg-slate-900/80 sm:rounded-3xl sm:p-4 sm:shadow-2xl md:p-6">
                 {logged && (
                     <>
                         <header className="mb-6 max-md:hidden shrink-0 md:flex md:items-start md:justify-between">
@@ -94,7 +94,7 @@ export function ChatWindowUI({ logged }: { logged: string | null | undefined }) 
 
                 <div
                     ref={messagesContainerRef}
-                    className="hide-scrollbar flex-1 overflow-y-auto rounded-xl border border-slate-200 bg-slate-50 p-3 dark:border-white/10 dark:bg-slate-950/70 sm:rounded-2xl sm:p-4"
+                    className="hide-scrollbar flex-1 overflow-y-auto rounded-lg border border-slate-200 bg-slate-50 p-2 dark:border-white/10 dark:bg-slate-950/70 sm:rounded-2xl sm:p-4"
                 >
                     <MessageList messages={messages} />
                 </div>
