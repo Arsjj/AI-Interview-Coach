@@ -1,4 +1,5 @@
-import { INTERVIEW_LEVELS, InterviewLevel } from "@/constants/interview-topics";
+import { INTERVIEW_LEVELS } from "@/constants/interview-topics";
+import { InterviewLevel } from "@/types";
 
 type Props = {
     value: InterviewLevel;
