@@ -11,25 +11,25 @@ import { useInterviewChat } from '@/hooks/useInterviewChat';
 import { SessionStats } from '../interview/SessionStates';
 import { ModeSelector } from '../interview/ModeSelector';
 import { useInterviewSettings } from '../providers/inteview-settings';
+import { useAsyncLock } from '@/hooks/useAsyncLock';
 
 
 const actionButtonClass =
-    'rounded-xl border border-slate-300 px-2 py-2 text-sm max-sm:text-[12px] dark:border-white/10 disabled:cursor-not-allowed disabled:opacity-50 sm:px-4 sm:py-3';
+    'rounded-xl cursor-pointer border border-slate-300 px-2 py-2 text-sm max-sm:text-[12px] dark:border-white/10 disabled:cursor-not-allowed disabled:opacity-50 sm:px-4 sm:py-3';
 
 export function ChatWindowUI({ logged }: { logged: string | null | undefined }) {
     const messagesContainerRef = useRef<HTMLDivElement>(null);
-
     const { mode, level, topic, setMode, setLevel, setTopic } = useInterviewSettings()
     const {
         evaluation,
         isEvaluationOpen,
         setIsEvaluationOpen,
         evaluateAnswer,
-        resetEvaluation,
         answeredCount,
         averageScore,
         sessionId,
         createSession,
+        completeSession
     } = useInterviewSession();
     const {
         input,
@@ -39,29 +39,33 @@ export function ChatWindowUI({ logged }: { logged: string | null | undefined }) 
         isLoading,
         handleSubmit,
         startInterview,
+
     } = useInterviewChat({ topic, level, mode });
+    const startInterviewLock = useAsyncLock();
+
     const hasActiveSession = Boolean(sessionId);
 
     function resetInterview() {
         setMessages([]);
-        resetEvaluation();
+        completeSession();
+    }
+
+    async function handleStartInterview() {
+        await startInterviewLock.run(async () => {
+            let activeSessionId = sessionId;
+
+            if (!activeSessionId) {
+                activeSessionId = await createSession();
+            }
+            if (!activeSessionId) return;
+            startInterview();
+        })
     }
 
     function scrollToBottom() {
         messagesContainerRef.current?.scrollTo({
             top: messagesContainerRef.current.scrollHeight,
         });
-    }
-
-    async function handleStartInterview() {
-        let activeSessionId = sessionId;
-
-        if (!activeSessionId) {
-            activeSessionId = await createSession();
-        }
-        if (!activeSessionId) return;
-
-        startInterview();
     }
 
     useEffect(() => {
@@ -121,7 +125,8 @@ export function ChatWindowUI({ logged }: { logged: string | null | undefined }) 
                             <button
                                 type="button"
                                 onClick={handleStartInterview}
-                                className={`${actionButtonClass} col-span-2 rounded-xl md:bg-blue-500 px-3 py-2.5 text-sm font-medium md:text-white sm:hover:bg-blue-400 sm:col-span-1 sm:px-4 sm:py-3`}
+                                disabled={isLoading}
+                                className={`${actionButtonClass} col-span-2 rounded-xl cursor-pointer md:bg-blue-500 px-3 py-2.5 text-sm font-medium md:text-white sm:hover:bg-blue-400 sm:col-span-1 sm:px-4 sm:py-3`}
                             >
                                 Start interview
                             </button>

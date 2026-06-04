@@ -1,4 +1,4 @@
-import { INTERVIEW_MODES } from "@/constants/interview-topics";
+import { INTERVIEW_MODES } from "@/constants";
 import { InterviewMode } from "@/types";
 
 type Props = {

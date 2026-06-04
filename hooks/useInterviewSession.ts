@@ -19,16 +19,12 @@ export function useInterviewSession() {
       ? 0
       : scores.reduce((sum, score) => sum + score, 0) / scores.length;
 
-      
-
   function getMessageText(message: UIMessage) {
     return message.parts
       .filter((part) => part.type === "text")
       .map((part) => part.text)
       .join("");
   }
-
-
 
   function getCurrentQuestion(messages: UIMessage[]) {
     const questionMessageIndex = messages.findLastIndex(

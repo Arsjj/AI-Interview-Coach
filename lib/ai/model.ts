@@ -1,4 +1,3 @@
-// lib/ai/model.ts
 import { groq } from '@ai-sdk/groq';
 
 export const interviewModel = groq('llama-3.1-8b-instant');

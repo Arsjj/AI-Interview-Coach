@@ -1,4 +1,3 @@
-// app/api/chat/route.ts
 import { convertToModelMessages, streamText, UIMessage } from 'ai';
 import { interviewModel } from '@/lib/ai/model';
 import { getInterviewSystemPrompt } from '@/lib/ai/prompts';

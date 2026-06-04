@@ -1,5 +1,5 @@
 'use client'
-import { Plus, Send } from 'lucide-react';
+import { ArrowUp } from 'lucide-react';
 
 type Props = {
   value: string;
@@ -29,7 +29,7 @@ export function ChatInput({ value, disabled, onChange, onSubmit }: Props) {
 
           <button
             type="submit"
-            className="w-full shrink-0 rounded-xl bg-black px-5 py-2.5 text-sm font-medium text-white disabled:opacity-50 sm:w-auto sm:py-3"
+            className="w-full shrink-0 rounded-xl cursor-pointer bg-black px-5 py-2.5 text-sm font-medium text-white hover:opacity-70 dark:hover:opacity-80 disabled:opacity-50 sm:w-auto sm:py-3"
             disabled={disabled}
           >
             Send
@@ -52,9 +52,9 @@ export function ChatInput({ value, disabled, onChange, onSubmit }: Props) {
             <button
               type="submit"
               disabled={disabled}
-              className="flex h-10 w-10 p-2 shrink-0 items-center justify-center rounded-full bg-blue-500 text-white"
+              className="flex h-10 w-10 p-2.5 shrink-0 items-center justify-center rounded-full bg-blue-500 text-white"
             >
-              <Send />
+              <ArrowUp />
             </button>
           </div>
         </form>

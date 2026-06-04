@@ -13,7 +13,7 @@ import { TopicSelector } from "../interview/TopicSelector";
 import { useInterviewSettings } from "../providers/inteview-settings";
 import { User } from "@/types";
 
-export const MobileMenu = ({ user }: User) => {
+export const MobileMenu = ({ user }: { user: User }) => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const { mode, level, topic, setMode, setLevel, setTopic } = useInterviewSettings()
 
@@ -28,18 +28,6 @@ export const MobileMenu = ({ user }: User) => {
         <>
             <header className="flex shrink-0 items-center justify-between md:hidden">
                 <div className='flex gap-2'>
-                    <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-slate-200 text-sm font-bold text-slate-700 dark:bg-white/10 dark:text-white">
-                        {user.image ? (
-                            <Image
-                                src={user.image}
-                                alt={user.name ?? 'User'}
-                                width={40}
-                                height={40}
-                            />
-                        ) : (
-                            user.name?.[0] ?? user.email?.[0] ?? 'U'
-                        )}
-                    </div>
                     <button
                         type="button"
                         aria-label="Open session menu"
@@ -67,6 +55,7 @@ export const MobileMenu = ({ user }: User) => {
             <MobileHeaderMenu
                 open={mobileMenuOpen}
                 onClose={() => setMobileMenuOpen(false)}
+                user={user}
             >
                 <SessionStats
                     answeredCount={answeredCount}
@@ -89,9 +78,10 @@ type MobileHeaderMenuProps = {
     open: boolean;
     onClose: () => void;
     children: React.ReactNode;
+    user: User;
 };
 
-export function MobileHeaderMenu({ open, onClose, children }: MobileHeaderMenuProps) {
+export function MobileHeaderMenu({ open, onClose, user, children }: MobileHeaderMenuProps) {
     useEffect(() => {
         if (!open) return;
 
@@ -119,7 +109,18 @@ export function MobileHeaderMenu({ open, onClose, children }: MobileHeaderMenuPr
                     }`}
             >
                 <div className="flex shrink-0 items-center justify-between border-b border-slate-200 p-4 dark:border-white/10">
-                    <h2 className="text-lg font-bold">Menu</h2>
+                     <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-slate-200 text-sm font-bold text-slate-700 dark:bg-white/10 dark:text-white">
+                        {user.image ? (
+                            <Image
+                                src={user.image}
+                                alt={user.name ?? 'User'}
+                                width={40}
+                                height={40}
+                            />
+                        ) : (
+                            user.name?.[0] ?? user.email?.[0] ?? 'U'
+                        )}
+                    </div>
                     <button
                         type="button"
                         aria-label="Close menu"
@@ -171,32 +172,5 @@ export function MobileHeaderMenu({ open, onClose, children }: MobileHeaderMenuPr
     );
 }
 
-type InterviewSettingsProps = {
-    children: React.ReactNode;
-};
-
-export function InterviewSettings({ children }: InterviewSettingsProps) {
-    const [open, setOpen] = useState(false);
-
-    return (
-        <div className="relative w-full sm:w-auto">
-            <button
-                type="button"
-                onClick={() => setOpen((prev) => !prev)}
-                className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm dark:border-white/10 sm:py-3"
-            >
-                Interview settings
-            </button>
-
-            {open && (
-                <div className="absolute left-0 right-0 top-[calc(100%+0.5rem)] z-50 rounded-2xl border border-slate-200 bg-white p-4 shadow-xl dark:border-white/10 dark:bg-slate-900 sm:left-auto sm:right-0 sm:w-96">
-                    <div className="grid gap-3">
-                        {children}
-                    </div>
-                </div>
-            )}
-        </div>
-    );
-}
 
 

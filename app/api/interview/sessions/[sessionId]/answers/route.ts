@@ -1,4 +1,3 @@
-// app/api/interview/sessions/[sessionId]/answers/route.ts
 import { created } from "@/lib/api/responses";
 import { errorResponse } from "@/lib/auth/error-response";
 import { requireSessionOwner } from "@/lib/auth/ownership";

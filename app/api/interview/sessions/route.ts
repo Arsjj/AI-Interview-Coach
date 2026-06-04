@@ -1,5 +1,3 @@
-// app/api/interview/sessions/route.ts
-import { auth } from "@/auth";
 import { created, success } from "@/lib/api/responses";
 import { errorResponse } from "@/lib/auth/error-response";
 import { requireUser } from "@/lib/auth/require-user";

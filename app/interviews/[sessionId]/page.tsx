@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import { auth } from '@/auth';
-import InterviewDetailUi from '@/components/interview/InterviewDetailUi';
-import { getInterviewAnswers, getInterviewSessionById } from '@/lib/services/interview-service';
+import { InterviewDetails } from '@/components/interview/InterviewDetails';
+import { getInterviewAnswers, getInterviewSession } from '@/lib/services/interview-service';
 
 type Props = {
   params: Promise<{
@@ -16,7 +16,7 @@ export default async function InterviewDetailPage({ params }: Props) {
     redirect('/api/auth/signin');
   }
 
-  const session = await getInterviewSessionById(sessionId);
+  const session = await getInterviewSession(sessionId);
 
   if (!session || session.userId !== userSession.user.email) {
     redirect('/api/auth/signin');
@@ -24,7 +24,7 @@ export default async function InterviewDetailPage({ params }: Props) {
   const answers = await getInterviewAnswers(sessionId)
 
   return (
-    <InterviewDetailUi answers={answers} session={session} />
+    <InterviewDetails answers={answers} session={session} />
   );
 }
 

@@ -1,4 +1,3 @@
-// lib/auth/require-user.ts
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 

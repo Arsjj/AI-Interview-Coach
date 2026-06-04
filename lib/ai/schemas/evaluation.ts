@@ -1,4 +1,3 @@
-// lib/ai/schemas/evaluation.ts
 import { z } from 'zod';
 
 export const evaluationSchema = z.object({

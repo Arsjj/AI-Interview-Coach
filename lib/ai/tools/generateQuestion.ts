@@ -1,4 +1,3 @@
-// lib/ai/tools/generateQuestion.ts
 import { tool } from 'ai';
 import { z } from 'zod';
 

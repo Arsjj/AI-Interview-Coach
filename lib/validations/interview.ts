@@ -1,4 +1,3 @@
-// lib/validations/interview.ts
 import { z } from "zod";
 import { evaluationSchema } from "../ai/schemas/evaluation";
 
@@ -18,5 +17,4 @@ export const saveInterviewAnswerSchema = z.object({
   followUpQuestion: z.string(),
 });
 
-// lib/validations/interview.ts
 export type Evaluation = z.infer<typeof evaluationSchema>;

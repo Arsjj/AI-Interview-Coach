@@ -1,19 +1,9 @@
 'use client';
 
-import { signIn } from 'next-auth/react';
-import { useState } from 'react';
+import { useAuth } from '@/hooks/useAuth';
 
 export function SignInButton() {
-  const [isLoading, setIsLoading] = useState(false);
-
-  async function handleSignIn() {
-    setIsLoading(true);
-
-    await signIn('google', {
-      callbackUrl: '/',
-      redirect: true,
-    });
-  }
+  const {isLoading, handleSignIn} = useAuth();
 
   return (
     <button

@@ -10,19 +10,10 @@ export async function createInterviewSession(data: {
   userId: string;
 }) {
   const [session] = await db.insert(interviewSessions).values(data).returning();
-
   return session;
 }
 
-// lib/services/interview-service.ts
-export async function getInterviewSessions(userId: string) {
-  return db
-    .select()
-    .from(interviewSessions)
-    .where(eq(interviewSessions.userId, userId))
-    .orderBy(desc(interviewSessions.createdAt));
-}
-export async function getInterviewSessionById(sessionId: string) {
+export async function getInterviewSession(sessionId: string) {
   const [session] = await db
     .select()
     .from(interviewSessions)
@@ -30,6 +21,62 @@ export async function getInterviewSessionById(sessionId: string) {
 
   return session ?? null;
 }
+
+export async function getInterviewSessions(userId: string) {
+  return db
+    .select()
+    .from(interviewSessions)
+    .where(eq(interviewSessions.userId, userId))
+    .orderBy(desc(interviewSessions.createdAt));
+}
+
+export async function completeInterviewSession(sessionId: string) {
+  const [session] = await db
+    .update(interviewSessions)
+    .set({
+      status: "completed",
+      updatedAt: new Date(),
+    })
+    .where(eq(interviewSessions.id, sessionId))
+    .returning();
+
+  return session;
+}
+
+export async function deleteInterviewSession(sessionId: string) {
+  const [deletedSession] = await db
+    .delete(interviewSessions)
+    .where(eq(interviewSessions.id, sessionId))
+    .returning();
+
+  return deletedSession ?? null;
+}
+
+export async function updateSessionAverageScore(sessionId: string) {
+  const [result] = await db
+    .select({
+      averageScore: avg(interviewAnswers.score),
+    })
+    .from(interviewAnswers)
+    .where(eq(interviewAnswers.sessionId, sessionId));
+
+  const averageScore = result?.averageScore
+    ? Math.round(Number(result.averageScore))
+    : 0;
+
+  await db
+    .update(interviewSessions)
+    .set({
+      averageScore,
+      updatedAt: new Date(),
+    })
+    .where(eq(interviewSessions.id, sessionId));
+
+  return averageScore;
+}
+
+
+
 
 export async function getInterviewAnswers(sessionId: string) {
   return db
@@ -60,51 +107,6 @@ export async function saveInterviewAnswer(data: {
   await updateSessionAverageScore(data.sessionId);
 
   return savedAnswer;
-}
-
-export async function updateSessionAverageScore(sessionId: string) {
-  const [result] = await db
-    .select({
-      averageScore: avg(interviewAnswers.score),
-    })
-    .from(interviewAnswers)
-    .where(eq(interviewAnswers.sessionId, sessionId));
-
-  const averageScore = result?.averageScore
-    ? Math.round(Number(result.averageScore))
-    : 0;
-
-  await db
-    .update(interviewSessions)
-    .set({
-      averageScore,
-      updatedAt: new Date(),
-    })
-    .where(eq(interviewSessions.id, sessionId));
-
-  return averageScore;
-}
-
-export async function completeInterviewSession(sessionId: string) {
-  const [session] = await db
-    .update(interviewSessions)
-    .set({
-      status: "completed",
-      updatedAt: new Date(),
-    })
-    .where(eq(interviewSessions.id, sessionId))
-    .returning();
-
-  return session;
-}
-
-export async function deleteInterviewSession(sessionId: string) {
-  const [deletedSession] = await db
-    .delete(interviewSessions)
-    .where(eq(interviewSessions.id, sessionId))
-    .returning();
-
-  return deletedSession ?? null;
 }
 
 export async function getInterviewDashboardStats(userId: string) {
