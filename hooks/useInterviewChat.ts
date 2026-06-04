@@ -1,6 +1,6 @@
+import { InterviewLevel, InterviewMode, InterviewTopic } from "@/types";
 import { useChat } from "@ai-sdk/react";
 import { useState } from "react";
-import { InterviewLevel, InterviewMode, InterviewTopic } from "@/constants/interview-topics";
 
 type Params = {
   topic: InterviewTopic;
@@ -10,9 +10,7 @@ type Params = {
 
 export function useInterviewChat({ topic, level, mode }: Params) {
   const [input, setInput] = useState("");
-
   const chat = useChat();
-
   const isLoading = chat.status === "submitted" || chat.status === "streaming";
 
   function startInterview() {
@@ -41,12 +39,12 @@ export function useInterviewChat({ topic, level, mode }: Params) {
 
   return {
     input,
-    setInput,
     messages: chat.messages,
-    setMessages: chat.setMessages,
     status: chat.status,
     isLoading,
+    setInput,
     handleSubmit,
     startInterview,
+    setMessages: chat.setMessages,
   };
 }

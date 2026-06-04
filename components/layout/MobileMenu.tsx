@@ -1,30 +1,22 @@
 'use client'
 
-import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { signOut } from "next-auth/react";
+import { X } from "lucide-react";;
 import { useInterviewSession } from "@/hooks/useInterviewSession";
 import { SessionStats } from "../interview/SessionStates";
 import { ModeSelector } from "../interview/ModeSelector";
 import { LevelSelector } from "../interview/LevelSelector";
 import { TopicSelector } from "../interview/TopicSelector";
-import { X } from "lucide-react";
-import { useInterviewSettings } from "@/hooks/useInterviewSettings";
-import { interviewState } from "@/app/state/interview-state";
+import { useInterviewSettings } from "../providers/inteview-settings";
+import { User } from "@/types";
 
-type Props = {
-    user: {
-        name?: string | null;
-        email?: string | null;
-        image?: string | null;
-    };
-};
-
-export const MobileMenu = ({ user }: Props) => {
+export const MobileMenu = ({ user }: User) => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const { mode, level, topic } = interviewState.getSettings()
-    const { handleLevelChange, handleModeChange, handleTopicChange } = useInterviewSettings()
+    const { mode, level, topic, setMode, setLevel, setTopic } = useInterviewSettings()
+
 
     const {
         answeredCount,
@@ -84,9 +76,9 @@ export const MobileMenu = ({ user }: Props) => {
                     <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">
                         Interview settings
                     </p>
-                    <ModeSelector value={mode} onChange={handleModeChange} />
-                    <LevelSelector value={level} onChange={handleLevelChange} />
-                    <TopicSelector value={topic} onChange={handleTopicChange} />
+                    <ModeSelector value={mode} onChange={setMode} />
+                    <LevelSelector value={level} onChange={setLevel} />
+                    <TopicSelector value={topic} onChange={setTopic} />
                 </div>
             </MobileHeaderMenu>
         </>

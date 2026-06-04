@@ -19,10 +19,9 @@ export function MessageItem({ message }: Props) {
         <p className="mb-1.5 text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400 sm:mb-2">
           {isUser ? 'You' : 'AI Coach'}
         </p>
-
         {message.parts.map((part, index) =>
           part.type === 'text' ? (
-            <div key={index} className="whitespace-pre-wrap break-words">
+            <div key={index} className="whitespace-pre-wrap wrap-break-words">
               {part.text}
             </div>
           ) : null,

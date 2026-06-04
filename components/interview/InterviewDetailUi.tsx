@@ -1,24 +1,16 @@
 'use client'
 
-import type { InferSelectModel } from 'drizzle-orm';
-import {
-    interviewAnswers,
-    interviewSessions,
-} from '@/lib/db/schema';
+import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { DeleteSessionButton } from "./DeleteSessionButton"
+import { InterviewAnswer, InterviewSession } from "@/types";
 
-type InterviewAnswer = InferSelectModel<typeof interviewAnswers>;
-type InterviewSession = InferSelectModel<typeof interviewSessions>;
-
-type InterviewDetailUiProps = {
+type Props = {
     answers: InterviewAnswer[];
     session: InterviewSession;
 };
 
-import { useRouter } from "next/navigation"
-import { DeleteSessionButton } from "./DeleteSessionButton"
-import Link from "next/link"
-
-function InterviewDetailUi({ answers, session }: InterviewDetailUiProps) {
+function InterviewDetailUi({ answers, session }: Props) {
     const router = useRouter()
     return (
         <main className="flex min-h-0 flex-1 flex-col overflow-auto bg-slate-100 p-4 text-slate-950 dark:bg-slate-950 dark:text-white sm:p-6">

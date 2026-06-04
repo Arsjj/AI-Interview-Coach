@@ -49,7 +49,6 @@ export function ChatInput({ value, disabled, onChange, onSubmit }: Props) {
               placeholder="Ask for a question or write your answer..."
               onChange={(e) => onChange(e.target.value)}
             />
-
             <button
               type="submit"
               disabled={disabled}

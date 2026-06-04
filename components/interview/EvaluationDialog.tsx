@@ -14,7 +14,6 @@ export function EvaluationDrawer({ open, evaluation, onClose }: Props) {
         className={`fixed inset-0 z-40 bg-black/40 transition-opacity ${open ? 'opacity-100' : 'pointer-events-none opacity-0'
           }`}
       />
-
       <aside
         className={`fixed inset-y-0 right-0 z-50 flex w-full max-w-full flex-col border-l border-slate-200 bg-white shadow-2xl transition-transform duration-300 dark:border-white/10 dark:bg-slate-950 sm:max-w-xl ${open ? 'translate-x-0' : 'translate-x-full'
           }`}

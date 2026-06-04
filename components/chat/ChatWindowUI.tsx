@@ -10,18 +10,16 @@ import { useInterviewSession } from '@/hooks/useInterviewSession';
 import { useInterviewChat } from '@/hooks/useInterviewChat';
 import { SessionStats } from '../interview/SessionStates';
 import { ModeSelector } from '../interview/ModeSelector';
-import { interviewState } from '@/app/state/interview-state';
-import { useInterviewSettings } from '@/hooks/useInterviewSettings';
+import { useInterviewSettings } from '../providers/inteview-settings';
+
 
 const actionButtonClass =
     'rounded-xl border border-slate-300 px-2 py-2 text-sm max-sm:text-[12px] dark:border-white/10 disabled:cursor-not-allowed disabled:opacity-50 sm:px-4 sm:py-3';
 
 export function ChatWindowUI({ logged }: { logged: string | null | undefined }) {
     const messagesContainerRef = useRef<HTMLDivElement>(null);
-    const { mode, level, topic } = interviewState.getSettings()
-    const { handleLevelChange, handleModeChange, handleTopicChange } = useInterviewSettings()
-    
 
+    const { mode, level, topic, setMode, setLevel, setTopic } = useInterviewSettings()
     const {
         evaluation,
         isEvaluationOpen,
@@ -33,7 +31,6 @@ export function ChatWindowUI({ logged }: { logged: string | null | undefined }) 
         sessionId,
         createSession,
     } = useInterviewSession();
-
     const {
         input,
         setInput,
@@ -43,7 +40,6 @@ export function ChatWindowUI({ logged }: { logged: string | null | undefined }) 
         handleSubmit,
         startInterview,
     } = useInterviewChat({ topic, level, mode });
-
     const hasActiveSession = Boolean(sessionId);
 
     function resetInterview() {
@@ -83,9 +79,9 @@ export function ChatWindowUI({ logged }: { logged: string | null | undefined }) 
                                 averageScore={averageScore}
                             />
                             <div className='flex gap-2 w-full max-w-md'>
-                                <ModeSelector value={mode} onChange={handleModeChange} />
-                                <LevelSelector value={level} onChange={handleLevelChange} />
-                                <TopicSelector value={topic} onChange={handleTopicChange} />
+                                <ModeSelector value={mode} onChange={setMode} />
+                                <LevelSelector value={level} onChange={setLevel} />
+                                <TopicSelector value={topic} onChange={setTopic} />
                             </div>
                         </header>
                     </>

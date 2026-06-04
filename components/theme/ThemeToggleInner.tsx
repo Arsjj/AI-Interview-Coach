@@ -1,5 +1,5 @@
 'use client';
-import { useAppTheme } from "../providers/theme-provider";
+import { useAppTheme } from "../providers/theme";
 
 export function ThemeToggleInner() {
   const { isDark, toggleTheme } = useAppTheme();

@@ -1,4 +1,3 @@
-// app/dashboard/page.tsx
 import Link from 'next/link';
 import { getInterviewDashboardStats } from '@/lib/services/interview-service';
 import { requireUser } from '@/lib/auth/require-user';

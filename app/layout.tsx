@@ -1,10 +1,11 @@
+import NextTopLoader from 'nextjs-toploader';
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
 
 import { Header } from "@/components/layout/Header";
-import { ThemeProvider } from "@/components/providers/theme-provider";
-import NextTopLoader from 'nextjs-toploader';
+import { ThemeProvider } from "@/components/providers/theme";
+import { SettingsProvider } from "@/components/providers/inteview-settings";
+import "./globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -44,8 +45,10 @@ export default function RootLayout({
           showSpinner={false}
         />
         <ThemeProvider>
-          <Header />
-          {children}
+          <SettingsProvider>
+            <Header />
+            {children}
+          </SettingsProvider>
         </ThemeProvider>
       </body>
     </html>

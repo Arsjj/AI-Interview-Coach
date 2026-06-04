@@ -1,7 +1,7 @@
-import { notFound, redirect } from 'next/navigation';
-import { getInterviewAnswers, getInterviewSessionById } from '@/lib/services/interview-service';
-import InterviewDetailUi from '@/components/interview/InterviewDetailUi';
+import { redirect } from 'next/navigation';
 import { auth } from '@/auth';
+import InterviewDetailUi from '@/components/interview/InterviewDetailUi';
+import { getInterviewAnswers, getInterviewSessionById } from '@/lib/services/interview-service';
 
 type Props = {
   params: Promise<{

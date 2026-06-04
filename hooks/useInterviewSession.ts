@@ -2,14 +2,15 @@
 import { useState } from "react";
 import type { Evaluation } from "@/lib/ai/schemas/evaluation";
 import { UIMessage } from "ai";
-import { interviewState } from "@/app/state/interview-state";
+import { useInterviewSettings } from "@/components/providers/inteview-settings";
+
 
 export function useInterviewSession() {
   const [evaluation, setEvaluation] = useState<Evaluation | null>(null);
   const [isEvaluationOpen, setIsEvaluationOpen] = useState(false);
   const [scores, setScores] = useState<number[]>([]);
   const [sessionId, setSessionId] = useState<string | null>(null);
-  const { mode, level, topic } = interviewState.getSettings();
+  const { mode, level, topic } = useInterviewSettings()
 
   const answeredCount = scores.length;
 
@@ -18,12 +19,16 @@ export function useInterviewSession() {
       ? 0
       : scores.reduce((sum, score) => sum + score, 0) / scores.length;
 
+      
+
   function getMessageText(message: UIMessage) {
     return message.parts
       .filter((part) => part.type === "text")
       .map((part) => part.text)
       .join("");
   }
+
+
 
   function getCurrentQuestion(messages: UIMessage[]) {
     const questionMessageIndex = messages.findLastIndex(
@@ -42,6 +47,9 @@ export function useInterviewSession() {
       questionMessageIndex,
     };
   }
+
+
+
 
   async function evaluateAnswer(messages: UIMessage[]) {
     if (!sessionId) {
@@ -108,11 +116,17 @@ export function useInterviewSession() {
     });
   }
 
+
+
+
   function resetEvaluation() {
     setEvaluation(null);
     setIsEvaluationOpen(false);
     setScores([]);
   }
+
+
+
 
   async function createSession() {
     const res = await fetch("/api/interview/sessions", {
@@ -139,6 +153,9 @@ export function useInterviewSession() {
 
     return session.id as string;
   }
+
+
+
 
   async function completeSession() {
     if (!sessionId) return;

@@ -1,4 +1,5 @@
-import { INTERVIEW_TOPICS, InterviewTopic } from "@/constants/interview-topics";
+import { INTERVIEW_TOPICS } from "@/constants/interview-topics";
+import { InterviewTopic } from "@/types";
 
 type Props = {
   value: string;

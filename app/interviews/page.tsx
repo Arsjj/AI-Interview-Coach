@@ -1,14 +1,11 @@
-// app/interviews/page.tsx
-import { DeleteSessionButton } from '@/components/interview/DeleteSessionButton';
-import { requireUser } from '@/lib/auth/require-user';
-import { getInterviewSessions } from '@/lib/services/interview-service';
 import Link from 'next/link';
+import { DeleteSessionButton } from '@/components/interview/DeleteSessionButton';
+import { getInterviewSessions } from '@/lib/services/interview-service';
+import { requireUser } from '@/lib/auth/require-user';
 
 export default async function InterviewsPage() {
- const user = await requireUser()
-
+  const user = await requireUser()
   const sessions = await getInterviewSessions(user.email);
-
 
   return (
     <main className="hide-scrollbar flex min-h-0 flex-1 flex-col overflow-auto bg-slate-100 p-4 text-slate-950 dark:bg-slate-950 dark:text-white sm:p-6">

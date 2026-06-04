@@ -1,4 +1,3 @@
-// components/interview/DeleteSessionButton.tsx
 'use client';
 
 import { useRouter } from 'next/navigation';
@@ -7,6 +6,7 @@ type Props = {
   sessionId: string;
   onDeleted?: () => void;
 };
+
 export function DeleteSessionButton({
   sessionId,
   onDeleted

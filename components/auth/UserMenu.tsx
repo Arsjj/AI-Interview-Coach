@@ -1,20 +1,13 @@
-// components/auth/UserMenu.tsx
 'use client';
 
+import { User } from '@/types';
 import { signOut } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 
-type Props = {
-    user: {
-        name?: string | null;
-        email?: string | null;
-        image?: string | null;
-    };
-};
 
-export function UserMenu({ user }: Props) {
+export function UserMenu({ user }: User) {
     const [open, setOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
 
