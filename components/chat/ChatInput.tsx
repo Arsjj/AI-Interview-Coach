@@ -32,7 +32,6 @@ export function ChatInput({ value, disabled, onChange, onSubmit }: Props) {
             placeholder="Ask for a question or write your answer..."
             onChange={handleChange}
           />
-
           <button
             type="submit"
             className="w-full shrink-0 rounded-xl cursor-pointer bg-black px-5 py-2.5 text-sm font-medium text-white hover:opacity-70 dark:hover:opacity-80 disabled:opacity-50 sm:w-auto sm:py-3"
