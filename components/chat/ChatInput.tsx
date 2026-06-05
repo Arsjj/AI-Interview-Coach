@@ -1,4 +1,5 @@
 'use client'
+import { SyntheticEvent } from 'react';
 import { ArrowUp } from 'lucide-react';
 
 type Props = {
@@ -9,22 +10,27 @@ type Props = {
 };
 
 export function ChatInput({ value, disabled, onChange, onSubmit }: Props) {
+  const handleSubmit = (e: SyntheticEvent) => {
+    e.preventDefault();
+    onSubmit();
+  }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onChange(e.target.value);
+  }
 
   return (
     <>
       <div className="max-md:hidden">
         <form
           className="mt-3 flex shrink-0 flex-col gap-2 sm:mt-6 sm:flex-row"
-          onSubmit={(e) => {
-            e.preventDefault();
-            onSubmit();
-          }}
+          onSubmit={handleSubmit}
         >
           <input
             className="flex-1 rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-base text-slate-950 outline-none focus:border-blue-400 dark:border-white/10 dark:bg-slate-800 dark:text-white sm:p-3 sm:text-sm"
             value={value}
             placeholder="Ask for a question or write your answer..."
-            onChange={(e) => onChange(e.target.value)}
+            onChange={handleChange}
           />
 
           <button
@@ -37,17 +43,14 @@ export function ChatInput({ value, disabled, onChange, onSubmit }: Props) {
         </form>
       </div>
       <div className='md:hidden'>
-        <form onSubmit={(e) => {
-          e.preventDefault();
-          onSubmit();
-        }}
+        <form onSubmit={handleSubmit}
           className="relative">
           <div className="flex items-center gap-2 rounded-xl border border-slate-300 bg-white p-2 dark:border-white/10 dark:bg-slate-900">
             <input
               value={value}
               className="flex-1 rounded-xl border-slate-300 bg-white px-3 py-2.5 text-base text-slate-950 outline-none focus:border-blue-400 border-0 dark:bg-slate-800 dark:text-white sm:p-3 sm:text-sm"
               placeholder="Ask for a question or write your answer..."
-              onChange={(e) => onChange(e.target.value)}
+              onChange={handleChange}
             />
             <button
               type="submit"
