@@ -39,7 +39,9 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="flex h-dvh flex-col overflow-x-hidden overflow-y-hidden bg-slate-100 text-slate-950 dark:bg-slate-950 dark:text-white">
+      <body
+        suppressHydrationWarning
+        className="flex h-dvh flex-col overflow-x-hidden overflow-y-hidden bg-slate-100 text-slate-950 dark:bg-slate-950 dark:text-white">
         <NextTopLoader
           color="#22d3ee"
           showSpinner={false}

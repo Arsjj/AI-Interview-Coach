@@ -1,7 +1,6 @@
-// app/profile/page.tsx
+import Image from 'next/image';
 import { requireUser } from '@/lib/auth/require-user';
 import { getInterviewDashboardStats } from '@/lib/services/interview-service';
-import Image from 'next/image';
 
 export default async function ProfilePage() {
   const user = await requireUser();
