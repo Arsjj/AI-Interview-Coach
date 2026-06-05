@@ -1,5 +1,5 @@
-import { ChatWindowUI } from './ChatWindowUI';
 import { auth } from '@/auth';
+import { ChatWindowUI } from './ChatWindowUI';
 
 export async function ChatWindow() {
   const session = await auth();

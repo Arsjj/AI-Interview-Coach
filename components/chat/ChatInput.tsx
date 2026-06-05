@@ -52,7 +52,7 @@ export function ChatInput({ value, disabled, onChange, onSubmit }: Props) {
             <button
               type="submit"
               disabled={disabled}
-              className="flex h-10 w-10 p-2.5 shrink-0 items-center justify-center rounded-full bg-blue-500 text-white"
+              className="flex h-10 w-10 p-2.5 shrink-0 items-center justify-center rounded-full bg-black text-white"
             >
               <ArrowUp />
             </button>

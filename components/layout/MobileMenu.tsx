@@ -16,13 +16,7 @@ import { User } from "@/types";
 export const MobileMenu = ({ user }: { user: User }) => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const { mode, level, topic, setMode, setLevel, setTopic } = useInterviewSettings()
-
-
-    const {
-        answeredCount,
-        averageScore,
-
-    } = useInterviewSession();
+    const { answeredCount, averageScore, } = useInterviewSession();
 
     return (
         <>
@@ -74,14 +68,14 @@ export const MobileMenu = ({ user }: { user: User }) => {
     )
 }
 
-type MobileHeaderMenuProps = {
+type Props = {
     open: boolean;
     onClose: () => void;
     children: React.ReactNode;
     user: User;
 };
 
-export function MobileHeaderMenu({ open, onClose, user, children }: MobileHeaderMenuProps) {
+export function MobileHeaderMenu({ open, onClose, user, children }: Props) {
     useEffect(() => {
         if (!open) return;
 
@@ -109,17 +103,19 @@ export function MobileHeaderMenu({ open, onClose, user, children }: MobileHeader
                     }`}
             >
                 <div className="flex shrink-0 items-center justify-between border-b border-slate-200 p-4 dark:border-white/10">
-                     <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-slate-200 text-sm font-bold text-slate-700 dark:bg-white/10 dark:text-white">
-                        {user.image ? (
-                            <Image
-                                src={user.image}
-                                alt={user.name ?? 'User'}
-                                width={40}
-                                height={40}
-                            />
-                        ) : (
-                            user.name?.[0] ?? user.email?.[0] ?? 'U'
-                        )}
+                    <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-slate-200 text-sm font-bold text-slate-700 dark:bg-white/10 dark:text-white">
+                        <Link href="/profile" onClick={onClose}>
+                            {user.image ? (
+                                <Image
+                                    src={user.image}
+                                    alt={user.name ?? 'User'}
+                                    width={40}
+                                    height={40}
+                                />
+                            ) : (
+                                user.name?.[0] ?? user.email?.[0] ?? 'U'
+                            )}
+                        </Link>
                     </div>
                     <button
                         type="button"
@@ -133,14 +129,6 @@ export function MobileHeaderMenu({ open, onClose, user, children }: MobileHeader
                 <div className="hide-scrollbar flex-1 space-y-5 overflow-y-auto p-4 pb-safe">
                     {children}
                     <div className="border-t border-slate-200 dark:border-white/10">
-                        <Link
-                            href="/profile"
-                            onClick={onClose}
-                            className="block px-5 py-4 text-sm text-slate-700 transition hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-white/10"
-                        >
-                            Profile
-                        </Link>
-
                         <Link
                             href="/dashboard"
                             onClick={onClose}

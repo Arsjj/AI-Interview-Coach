@@ -12,7 +12,7 @@ type Props = {
     user: User;
 };
 
-export function UserMenu({ user }: Props) {
+export function Menu({ user }: Props) {
     const [open, setOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
     useCloseOnOutsideClick(menuRef, handleMenuClose);

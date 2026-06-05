@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { auth } from '@/auth';
-import { UserMenu } from '../auth/UserMenu';
+import { Menu } from './Menu';
 import { SignInButton } from '../auth/SignButton';
 import { ThemeToggle } from '../theme/ThemeToggle';
 import { MobileMenu } from './MobileMenu';
@@ -28,8 +28,8 @@ export async function Header() {
                 <div className="flex align-center">
                     {session?.user?.email ? (
                         <>
-                            <div className='max-md:hidden'> <UserMenu user={session.user} /> </div>
-                            <div className='md:hidden'><MobileMenu user={session.user}/></div>
+                            <div className='max-md:hidden'> <Menu user={session.user} /> </div>
+                            <div className='md:hidden'><MobileMenu user={session.user} /></div>
                         </>
                     ) : (
                         <SignInButton />

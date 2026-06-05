@@ -1,9 +1,9 @@
 import NextTopLoader from 'nextjs-toploader';
 import type { Metadata } from "next";
+import { ThemeProvider } from 'next-themes';
 import { Geist, Geist_Mono } from "next/font/google";
 
 import { Header } from "@/components/layout/Header";
-import { ThemeProvider } from "@/components/providers/theme";
 import { SettingsProvider } from "@/components/providers/inteview-settings";
 import "./globals.css";
 
@@ -44,7 +44,7 @@ export default function RootLayout({
           color="#22d3ee"
           showSpinner={false}
         />
-        <ThemeProvider>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={true}>
           <SettingsProvider>
             <Header />
             {children}

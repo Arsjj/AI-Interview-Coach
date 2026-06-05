@@ -1,8 +1,7 @@
-// hooks/useInterviewSession.ts
 import { useState } from "react";
-import type { Evaluation } from "@/lib/ai/schemas/evaluation";
 import { UIMessage } from "ai";
 import { useInterviewSettings } from "@/components/providers/inteview-settings";
+import type { Evaluation } from "@/lib/ai/schemas/evaluation";
 
 
 export function useInterviewSession() {

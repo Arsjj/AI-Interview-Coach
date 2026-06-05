@@ -1,6 +1,6 @@
-import { InterviewLevel, InterviewMode, InterviewTopic } from "@/types";
-import { useChat } from "@ai-sdk/react";
 import { useState } from "react";
+import { useChat } from "@ai-sdk/react";
+import { InterviewLevel, InterviewMode, InterviewTopic } from "@/types";
 
 type Params = {
   topic: InterviewTopic;
